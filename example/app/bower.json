@@ -1,0 +1,26 @@
+{
+  "name": "stackd.io",
+  "version": "0.4.0",
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "q": "~0.9.7",
+    "knockout.js": "~3.0.0",
+    "underscore": "~1.6.0",
+    "postal.js": "~0.8.11",
+    "requirejs": "~2.1.11"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "authors": [
+    "Steve Brownlee <chortlehoort@gmail.com>"
+  ],
+  "license": "Apache 2",
+  "homepage": "https://github.com/chortlehoort/galaxy.js",
+  "private": true
+}
