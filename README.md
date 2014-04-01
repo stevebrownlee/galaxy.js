@@ -1,10 +1,9 @@
 galaxy.js
 =========
-#Overview
+
 galaxy.js was written to allow Knockout developers to inject HTML template fragments into the DOM on an as-needed basis. So instead of having all of the DOM elements downloaded to every client, only the bare minimum is sent to each client on the initial request, and as more views are accessed, only then does the additional DOM get downloaded and injected into the current document.
 
-#About
-galaxy.js was born from the stellar nursery of stackd.io. It is a utility I wrote that allows people writing single page applications (SPAs) with Knockout and Require. It also utilizes the [Q](https://github.com/kriskowal/q) library to implement Promises. For it's event system, I chose [Postal.js](https://github.com/postaljs/postal.js) because it combines just the right amount of features while still having a small footprint.
+galaxy.js was born from the stellar nursery of [stackd.io](http://www.stackd.io/). It is a utility I wrote that allows people writing single page applications (SPAs) with Knockout and Require. It also utilizes the [Q](https://github.com/kriskowal/q) library to implement Promises. For it's event system, I chose [Postal.js](https://github.com/postaljs/postal.js) because it combines just the right amount of features while still having a small footprint.
 
 #Getting started
 
