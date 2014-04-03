@@ -1,5 +1,7 @@
 define(['q', 'knockout', 'galaxy'],
 function (Q, ko, $galaxy) {
+
+
     var vm = function () {
         var self = this;
 
@@ -11,13 +13,6 @@ function (Q, ko, $galaxy) {
         self.id = 'welcome';
         self.templatePath = 'welcome.html';
         self.domBindingId = '#welcome';
-        self.defaultView = true;
-
-        // try {
-            $galaxy.join(self);
-        // } catch (ex) {
-        //     console.log(ex);            
-        // }
 
         /*
          *  ==================================================================================
@@ -25,11 +20,23 @@ function (Q, ko, $galaxy) {
          *  ==================================================================================
          */
         $galaxy.network.subscribe(self.id + '.docked', function () {
-            console.log('welcome page docked');
+            
         });
 
+        self.showWelcome = function () {
+            $galaxy.StarChart.warp('home');
+        };
+
+        self.showLocations = function () {
+            $galaxy.StarChart.warp('locations');
+        };
+
+        self.showProducts = function () {
+            $galaxy.StarChart.warp('products');
+        };
+
         self.showUsers = function () {
-            $galaxy.transport('user.list');
+            $galaxy.StarChart.warp('users');
         };
     };
     return new vm();

@@ -8,11 +8,9 @@ function (Q, ko, $galaxy) {
          *   R E G I S T R A T I O N   S E C T I O N
          *  ==================================================================================
         */
-        self.id = 'user.list';
-        self.templatePath = 'users.html';
-        self.domBindingId = '#user-list';
-
-        self.UserStore = new $galaxy.depot();
+        self.id = 'products/product.list';
+        self.templatePath = 'products/products.html';
+        self.domBindingId = '#product-list';
 
         /*
          *  ==================================================================================
@@ -20,12 +18,7 @@ function (Q, ko, $galaxy) {
          *  ==================================================================================
          */
         $galaxy.network.subscribe(self.id + '.docked', function () {
-            self.UserStore.add({id: 1, firstName: 'Nigel', lastName: 'Montgomery'});
-            self.UserStore.add({id: 2, firstName: 'Tricia', lastName: 'Young'});
-            self.UserStore.add({id: 3, firstName: 'Jesus', lastName: 'Gonzalez'});
-            self.UserStore.add({id: 4, firstName: 'Petr', lastName: 'Medvedev'});
-            self.UserStore.add({id: 5, firstName: 'Amelie', lastName: 'Lefebvre'});
-            self.UserStore.add({id: 6, firstName: 'Hans', lastName: 'Brechtel'});
+            
         });
 
         self.showWelcome = function () {
@@ -42,11 +35,6 @@ function (Q, ko, $galaxy) {
 
         self.showUsers = function () {
             $galaxy.StarChart.warp('users');
-        };
-
-        self.showUserDetails = function (user) {
-            console.log('show user details', user);
-            $galaxy.StarChart.warp('users/'+user.id);
         };
     };
     return new vm();
