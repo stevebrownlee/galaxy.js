@@ -79,43 +79,6 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
         }
     };
 
-    $galaxy.prototype.parseHash = function () {
-        var self = this;
-        var redirectAfterParse = false;
-
-        /*
-         *   Parse the location.hash to find the view id and any additional 
-         *   key/value pairs in the URL parameters to pass to the view model
-         */
-        var grabHash = location.hash.split('#')[1];
-
-        if (grabHash && this.currentLocation && (this.currentLocation !== grabHash.split('&')[0])) {
-            redirectAfterParse = true;
-        }
-
-        if (grabHash) {
-            this.currentLocation = grabHash.split('&')[0];
-            var urlParamArray = grabHash.split('&');
-            urlParamArray.splice(0,1);
-
-            this.currentPayload = urlParamArray.map(function (kv) {
-                var a = {}, k = kv.split('=')[0], v = kv.split('=')[1];
-                a[k] = v;
-                return a;
-            }).reduce(function (prev,curr) {
-                for (var key in curr) {
-                    prev[key] = curr[key];
-                }
-                return prev;
-            }, {});
-        }
-
-        // redirectAfterParse should only be true on browser history change
-        if (redirectAfterParse) {
-            this.render(this.currentLocation);
-        }
-    };
-
     $galaxy.prototype.getDOMElements = function (id) {
         var bindingType = (id.substr(0,1) === '.') ? 'class' : 'id';
         var undecoratedDomBindingId = id.replace(/[\.#]/, '');
@@ -230,7 +193,7 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
                             el.innerHTML = evt.target.responseText;             // Inject the HTML
                             ko.applyBindings(viewmodel, el);                    // Bind view model to DOM
                             viewmodel.__loaded = true;                            // Flag view model as loaded
-                            self.network.publish(viewmodel.id + '.arrived');    // Notify subscribers of arrived event
+                            self.network.publish(viewmodel.id + '.bound');    // Notify subscribers of arrived event
                             deferred.resolve();                                 // Resolve promise
                         }
                     };
@@ -238,7 +201,7 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
                     xhr.send();
                 });
             } else {
-                this.network.publish(viewmodel.id + '.arrived');
+                this.network.publish(viewmodel.id + '.bound');
                 deferred.resolve();
             }
         }
@@ -371,40 +334,52 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
 
         StarChart.prototype.scan = function (pattern) {
             var self = this;
-            var moduleId, urlParamArray, currentPayload, currentViewModel;
+            var moduleId, urlParamArray, currentPayload = {}, currentViewModel;
 
             /*
              *   Parse the location.hash to find the view id and any additional 
              *   key/value pairs in the URL parameters to pass to the view model
              */
-            var grabHash = location.hash.split('#')[1] || '';
+            var locationHash = location.hash.split('#')[1] || '';
+            moduleId = locationHash;
 
-            if (grabHash !== '') {
-                urlParamArray = grabHash.split('/');
+            if (locationHash !== '') {
+                urlParamArray = locationHash.split('/');
                 moduleId = urlParamArray[0];
                 urlParamArray.splice(0,1);
-
-                currentPayload = urlParamArray.map(function (kv) {
-                    var a = {}, k = kv.split('=')[0], v = kv.split('=')[1];
-                    a[k] = v;
-                    return a;
-                }).reduce(function (prev,curr) {
-                    for (var key in curr) {
-                        prev[key] = curr[key];
-                    }
-                    return prev;
-                }, {});
-            } else {
-                moduleId = '';
             }
 
-            var match = self.routes.filter(function (route) {
-                return route.pattern === moduleId;
-            })[0] || false;
+            // Find any registered routes where the module name matches
+            var matches = self.routes.filter(function (route) {
+                return route.pattern.split('/')[0] === moduleId;
+            }) || false;
 
-            if (match) {
-                self.currentLocation = match.viewModel;
-                galaxy.render(match.viewModel, urlParamArray);
+            // If any module name matches, filter it further to any registered
+            // routes with the same pattern length
+            if (matches) {
+                matches = matches.filter(function (route) {
+                    return locationHash.split('/').length === route.pattern.split('/').length;
+                }) || false;
+            }
+
+            // TODO: If the pattern lengths match, need to compare each segment, ignore
+            // the parameterized segments, and then each remaining segment needs to match
+            // 1:1 between the route pattern and the hash pattern.
+            
+            // Create a data payload from the parameterized segments
+            if (matches && matches.length && urlParamArray.length) {
+                var _arguments = matches[0].pattern.split('/')
+                _arguments.splice(0,1);
+
+                for (var i=0, j=_arguments.length; i<=j, arg=_arguments[i]; i+=1) {
+                    if (arg.substr(0,1) === ':') {
+                        currentPayload[arg.substr(1, arg.length-1)] = urlParamArray[i];
+                    }
+                }
+            }
+
+            if (matches && matches.length) {
+                galaxy.render(matches[0].viewModel, currentPayload);
             }
         };
 
