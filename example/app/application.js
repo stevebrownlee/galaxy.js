@@ -11,15 +11,18 @@ requirejs.config({
 
 require(['galaxy'], function ($galaxy) {
 
+    // Set up navigational routes
     $galaxy.addRoute('', 'welcome');
     $galaxy.addRoute('home', 'welcome');
     $galaxy.addRoute('users', 'user.list');
-    $galaxy.addRoute('users/:id', 'user.details');
+    $galaxy.addRoute('users/:id', 'user.detail');
+    $galaxy.addRoute('users/:id/edit', 'user.edit');
     $galaxy.addRoute('locations', 'location.list');
     $galaxy.addRoute('locations/:id', 'location.detail');
     $galaxy.addRoute('products', 'products/product.list');
     $galaxy.addRoute('products/:id', 'products/product.list');
 
+    // Initialize the galaxy library
     $galaxy.create({
         viewmodelDirectory: '/app/viewmodel',
         viewDirectory: '/app/view'

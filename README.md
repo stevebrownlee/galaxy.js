@@ -1,9 +1,10 @@
-galaxy.js
-=========
+#galaxy.js
 
-galaxy.js was written to allow Knockout developers to inject HTML template fragments into the DOM on an as-needed basis. So instead of having all of the DOM elements downloaded to every client, only the bare minimum is sent to each client on the initial request, and as more views are accessed, only then does the additional DOM get downloaded and injected into the current document.
+##A lightweight library for building modular applications
 
-galaxy.js was born from the stellar nursery of [stackd.io](http://www.stackd.io/). It is a utility I wrote that allows people writing single page applications (SPAs) with Knockout and Require. It also utilizes the [Q](https://github.com/kriskowal/q) library to implement Promises. For it's event system, I chose [Postal.js](https://github.com/postaljs/postal.js) because it combines just the right amount of features while still having a small footprint.
+galaxy.js was written to allow [Knockout][1] developers to inject HTML template fragments into the DOM on an as-needed basis. So instead of having all of the DOM elements downloaded to every client, only the bare minimum is sent to each client on the initial request, and as more views are accessed, only then does the additional DOM get downloaded and injected into the current document.
+
+galaxy.js was born from the stellar nursery of [stackd.io](http://www.stackd.io/). It is a utility I wrote that allows people writing single page applications (SPAs) with Knockout and [Require][2] to have a lightweight solution that gives them a modular application with DOM binding and ad-hoc DOM injection. It also utilizes the [Q](https://github.com/kriskowal/q) library to implement Promises. For it's event system, I chose [Postal.js](https://github.com/postaljs/postal.js) because it combines just the right amount of features while still having a small footprint.
 
 #Getting started
 
@@ -15,12 +16,16 @@ After you clone the repo, you can serve up the application by first installing N
     sudo apt-get install nodejs  # For Ubuntu and its ilk
     sudo yum install nodejs      # For CentOS and its ilk
     
-Then simply run the `example.js` file with Node from the `server` directory.
+This will install `npm`, the Node package manager service as well. Then you can install a basic HTTP server.
 
-    cd galaxy.js/example/server
-    node example.js
+	sudo npm install http-server -g
+
+Next, you go to the example application root folder and start the server.
+
+	cd galaxy.js/example
+	http-server ./
     
-Then browse to https://localhost:8001 and you should see a very basic welcome message.
+Now you can browse to https://localhost:8081 and you should see a very basic welcome message.
 
 If you inspect the current DOM, you'll notice that only the `<div id="welcome">` element contains child elements. This is because galaxy.js loaded a separate file named `views/welcome.html` and injected its contents into that element.
 
@@ -43,3 +48,7 @@ Then use `bower` to pull these dependencies.
     bower install knockoutjs --save
     bower install q --save
 
+
+  [1]: knockoutjs.com
+  [2]: requirejs.org
+  [3]: http://expressjs.com/

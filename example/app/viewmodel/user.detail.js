@@ -8,9 +8,9 @@ function (Q, ko, $galaxy) {
          *   R E G I S T R A T I O N   S E C T I O N
          *  ==================================================================================
         */
-        self.id = 'user.list';
-        self.templatePath = 'users.html';
-        self.domBindingId = '#user-list';
+        self.id = 'user.detail';
+        self.templatePath = 'userdetail.html';
+        self.domBindingId = '#user-detail';
 
         self.UserStore = new $galaxy.depot();
 
