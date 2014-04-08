@@ -29,8 +29,8 @@ The `http-server` module is just a very basic project that will serve static fil
 ## Serve the application
 Next, you go to the example application root folder and start the server.
 
-  cd ~/projects/galaxy.js/example
-  http-server ./
+    cd ~/projects/galaxy.js/example
+    http-server ./
     
 Now you can browse to https://localhost:8081 and you should see a very basic welcome message.
 
