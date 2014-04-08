@@ -32,7 +32,7 @@ Next, you go to the example application root folder and start the server.
     cd ~/projects/galaxy.js/example
     http-server ./
     
-Now you can browse to https://localhost:8081 and you should see a very basic welcome message.
+Now you can browse to http://localhost:8081 and you should see a very basic welcome message.
 
 If you inspect the current DOM (right-click anywhere in the view and choose `Inspect Element`), you'll notice that only the `<div id="welcome">` element contains child elements. This is because galaxy.js loaded a separate file named `views/welcome.html` and injected its contents into that element.
 
