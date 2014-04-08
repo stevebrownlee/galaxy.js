@@ -24,7 +24,7 @@ This will also install `npm`, the Node package manager service as well. Then you
 ## Install a basic Node HTTP server 
 The `http-server` module is just a very basic project that will serve static files from the directory of your choice.
 
-  sudo npm install -g http-server
+    sudo npm install -g http-server
 
 ## Serve the application
 Next, you go to the example application root folder and start the server.
