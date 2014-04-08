@@ -42,40 +42,46 @@ Click on `Show Users` link and you'll be presented with another, very basic view
 
 Building a modular Knockout/Require application this way allows you to build up the DOM for each view (and even child views, or widgets) in separate HTML files and only inject them as needed.
 
-## Building your own application
-### Create a project directory
+# Quick Start
+
+## Create a project directory
 Create a new directory for your application.
 
     mkdir ~/projects/intergalactic && cd ~/projects/intergalactic
 
-### Install [Bower](http://bower.io/)
+## Install [Bower](http://bower.io/) and galaxy.js
 
-    npm install -g bower
+    npm install -g bower galaxy.js
 
-While in your project's root directory, use `bower` to initialize your project.
+## Create the base DOM
 
-    bower init    # Follow instructions for initializing your project
+## Create a view template
 
-### Dependencies: Method 1 (copy & paste)
-To get the bare minimum needs to start working with galaxy.js, you can copy the `galaxy.js\example\app\bower.json` into your project directory and then run the following command.
+## Construct a star base
 
-    cd ~/projects/intergalactic
-    cp /{path to galaxy}/galaxy.js/example/app/bower.json .
-    bower install
+### The galactic registry
 
-### Dependencies: Method 2 (do it yourself)
+### Listen to galactic communication
 
-#### Install Require, Knockout, Q & Postal
-galaxy.js needs the following `bower` packages pulled. Make sure that you grab the `0.9.7` version of Q.
+## Configuration
 
-    bower install requirejs knockoutjs q postal.js --save 
+### Setting up galactic routes
 
-#### Compile Q
-The Q library does not include a minified version in their Bower package, so I suggest you compile that project to get it.
+### Creating your galaxy
 
-    cd bower_componenets/q && npm install & cd ../..
-    
-After running that command you should see the file `bower_components\q\q.min.js`.
+## Transporting users between star bases
+
+1. Add links to view template
+1. Handle link clicks in view model
+1. Usage 1 (no payload) `$galaxy.warp().to('users').engage();`
+1. Usage 2 (smuggled payload) `$galaxy.warp().to('userdetail').with({user: user}).engage();`
+1. Usage 3 (url + smuggled payload) `$galaxy.warp().to('product/'+product.id).with({product: product}).engage();`
+
+
+
+
+
+
 
   [1]: knockoutjs.com
   [2]: requirejs.org

@@ -1,51 +1,73 @@
-define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
-    var DuplicateViewRegistrationException = function (message) {
-       this.message = message;
-       this.name = "DuplicateViewRegistrationException";
+define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
+    var DuplicateViewRegistrationException = function(message) {
+        this.message = message;
+        this.name = "DuplicateViewRegistrationException";
     };
 
-    var UnregisteredViewWarning = function (message) {
-       this.message = message;
-       this.name = "UnregisteredViewWarning";
+    var UnregisteredViewWarning = function(message) {
+        this.message = message;
+        this.name = "UnregisteredViewWarning";
     };
 
-    var MissingViewModelException = function (message) {
-       this.message = message;
-       this.name = "MissingViewModelException";
+    var MissingViewModelException = function(message) {
+        this.message = message;
+        this.name = "MissingViewModelException";
     };
 
-    var MissingDOMElementException = function (message) {
-       this.message = message;
-       this.name = "MissingDOMElementException";
+    var MissingDOMElementException = function(message) {
+        this.message = message;
+        this.name = "MissingDOMElementException";
     };
 
-    var ViewLoadedException = function (message) {
-       this.message = message;
-       this.name = "ViewLoadedException";
+    var ViewLoadedException = function(message) {
+        this.message = message;
+        this.name = "ViewLoadedException";
     };
 
-    var MissingOptionException = function (message) {
-       this.message = message;
-       this.name = "MissingOptionException";
+    var MissingOptionException = function(message) {
+        this.message = message;
+        this.name = "MissingOptionException";
     };
 
-    var $galaxy = function (options) {
+    var $galaxy = function(options) {
         var self = this;
         self.network = postal.channel('galaxy');
         self.viewmodelDirectory = '/app/viewmodel';
         self.viewDirectory = '/app/view';
-        self.currentPayload = null;
         self.federation = [];
         self.currentLocation = null;
         self.StarChart = self.StarCharter();
-
     };
 
-    $galaxy.prototype.addRoute = function (pattern, vmId, hash) {
+    $galaxy.prototype.warp = function(options) {
+        var self = this;
+        var warpParameters = {};
+
+        var engage = function () {
+            self.StarChart.warp(warpParameters);
+        };
+        
+        return {
+            to: function (location) {
+                warpParameters.location = location;
+                return {
+                    engage: engage,
+                    with: function (payload) {
+                        warpParameters.payload = payload;
+                        return {
+                            engage: engage
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    $galaxy.prototype.addRoute = function(pattern, vmId, hash) {
         this.StarChart.addRoute(pattern, vmId, hash);
     };
 
-    $galaxy.prototype.create = function (options) {
+    $galaxy.prototype.create = function(options) {
         var self = this;
 
         if (options) {
@@ -53,19 +75,19 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
         }
 
         // Handle errors when require tries to load a view model id that is invalid
-        requirejs.onError = function (err) {
+        requirejs.onError = function(err) {
             console.error(new MissingViewModelException('Unable to find the location of `' + self.currentLocation + '.js`. ' + err.message));
         };
 
         self.StarChart.scan();
 
         // Detect when the hash changes
-        window.addEventListener('popstate', function (event) {
+        window.addEventListener('popstate', function(event) {
             self.StarChart.scan();
         });
     };
 
-    $galaxy.prototype.setOptions = function (options) {
+    $galaxy.prototype.setOptions = function(options) {
         if (options && options.hasOwnProperty('channel') && options.channel !== '') {
             this.network = postal.channel(options.channel);
         }
@@ -79,8 +101,8 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
         }
     };
 
-    $galaxy.prototype.getDOMElements = function (id) {
-        var bindingType = (id.substr(0,1) === '.') ? 'class' : 'id';
+    $galaxy.prototype.getDOMElements = function(id) {
+        var bindingType = (id.substr(0, 1) === '.') ? 'class' : 'id';
         var undecoratedDomBindingId = id.replace(/[\.#]/, '');
         var elements = [];
 
@@ -97,18 +119,18 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             elements[elements.length] = document.getElementById(undecoratedDomBindingId);
         }
 
-        if (elements[elements.length-1] === null) {
-            throw new MissingDOMElementException('The DOM element you specified ('+id+') for view model `'+this.currentLocation+'` was not found.')
+        if (elements[elements.length - 1] === null) {
+            throw new MissingDOMElementException('The DOM element you specified (' + id + ') for view model `' + this.currentLocation + '` was not found.')
         }
 
         return elements;
     };
 
 
-    $galaxy.prototype.loadViewModel = function (id) {
+    $galaxy.prototype.loadViewModel = function(id) {
         var self = this;
         var deferred = Q.defer();
-        var matchFound = self.federation.filter(function (model) {
+        var matchFound = self.federation.filter(function(model) {
             return model.id === id;
         })[0];
 
@@ -117,7 +139,7 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             console.warn(new UnregisteredViewWarning('Location with id `' + id + '` has not joined the federation. Attempting to join in now.'));
 
             // Require the view model
-            require([self.viewmodelDirectory + '/' + id + '.js'], function (vm) {
+            require([self.viewmodelDirectory + '/' + id + '.js'], function(vm) {
                 self.join(vm);
                 deferred.resolve(vm);
             });
@@ -128,13 +150,13 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
         return deferred.promise;
     };
 
-    $galaxy.prototype.join = function (viewmodel) {
+    $galaxy.prototype.join = function(viewmodel) {
         var self = this;
 
         if (!viewmodel.hasOwnProperty('__joined')) {
             // If a view model defined any children, join them first, and mark them as children
             if (viewmodel.hasOwnProperty('children') && viewmodel.children.length > 0) {
-                viewmodel.children.map(function (child) {
+                viewmodel.children.map(function(child) {
                     child.__parent = viewmodel.id;
                 });
             }
@@ -146,7 +168,7 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
 
             // Give each model a show method that delegates to the internal join() function
             if (!viewmodel.hasOwnProperty('show')) {
-                viewmodel.show = function () {
+                viewmodel.show = function() {
                     self.render(this.id);
                 };
             }
@@ -156,28 +178,30 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             self.federation.push(viewmodel);
             this.network.publish(viewmodel.id + '.joined');
 
-        // View already joined
         } else {
+            // View already joined
             if (!viewmodel.hasOwnProperty('__parent')) {
                 console.warn('The view model with id `' + viewmodel.id + '` has already joined the federation.');
             }
         }
     };
 
-    $galaxy.prototype.leave = function (id) {
-        var exists = _.findWhere(this.federation, {id: id});
+    $galaxy.prototype.leave = function(id) {
+        var exists = _.findWhere(this.federation, {
+            id: id
+        });
 
         if (exists) {
-            this.federation = _.filter(this.federation, function (vm) {
+            this.federation = _.filter(this.federation, function(vm) {
                 vm.id !== id;
             });
         }
     };
 
-    $galaxy.prototype.loadTemplate = function (id) {
+    $galaxy.prototype.loadTemplate = function(id) {
         var self = this;
         var deferred = Q.defer();
-        var viewmodel = self.federation.filter(function (vm) {
+        var viewmodel = self.federation.filter(function(vm) {
             return vm.id === id;
         })[0];
 
@@ -185,16 +209,16 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             if (!viewmodel.__loaded) {
                 var viewTemplate = [this.viewDirectory, '/', viewmodel.templatePath].join('');
 
-                self.getDOMElements(viewmodel.domBindingId).forEach(function (el) {
-                    var xhr = new XMLHttpRequest();         // Create XHR object
-                    xhr.open('GET', viewTemplate, true);    // GET the HTML file for the view model
-                    xhr.onloadend = function (evt) {        // After it's loaded
+                self.getDOMElements(viewmodel.domBindingId).forEach(function(el) {
+                    var xhr = new XMLHttpRequest(); // Create XHR object
+                    xhr.open('GET', viewTemplate, true); // GET the HTML file for the view model
+                    xhr.onloadend = function(evt) { // After it's loaded
                         if (evt.target.status === 200 || evt.target.status === 302) {
-                            el.innerHTML = evt.target.responseText;             // Inject the HTML
-                            ko.applyBindings(viewmodel, el);                    // Bind view model to DOM
-                            viewmodel.__loaded = true;                            // Flag view model as loaded
-                            self.network.publish(viewmodel.id + '.bound');    // Notify subscribers of arrived event
-                            deferred.resolve();                                 // Resolve promise
+                            el.innerHTML = evt.target.responseText; // Inject the HTML
+                            ko.applyBindings(viewmodel, el); // Bind view model to DOM
+                            viewmodel.__loaded = true; // Flag view model as loaded
+                            self.network.publish(viewmodel.id + '.bound'); // Notify subscribers of arrived event
+                            deferred.resolve(); // Resolve promise
                         }
                     };
 
@@ -209,32 +233,32 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
         return deferred.promise;
     };
 
-    $galaxy.prototype.hideInactiveViews = function (id) {
+    $galaxy.prototype.hideInactiveViews = function(id) {
         var self = this;
 
         // Capture current view and hide all others (not autoRender views)
-        self.federation.forEach(function (view) {
+        self.federation.forEach(function(view) {
             if (!view.autoRender && view.id !== id) {
-                self.getDOMElements(view.domBindingId).forEach(function (el) {
+                self.getDOMElements(view.domBindingId).forEach(function(el) {
                     el.style.display = 'none';
                 });
             }
         });
     };
 
-    $galaxy.prototype.render = function (viewmodelId, payload) {
+    $galaxy.prototype.render = function(viewmodelId, payload) {
         var self = this;
         var currentViewModel = null;
 
-        self.loadViewModel(viewmodelId).then(function (vm) {
+        self.loadViewModel(viewmodelId).then(function(vm) {
             currentViewModel = vm;
             self.hideInactiveViews(viewmodelId);
 
             return self.loadTemplate(viewmodelId);
-        }).then(function () {
+        }).then(function() {
 
             // After view is loaded, ensure it is visible
-            self.getDOMElements(currentViewModel.domBindingId).forEach(function (el) {
+            self.getDOMElements(currentViewModel.domBindingId).forEach(function(el) {
                 el.style.display = '';
             });
 
@@ -242,50 +266,53 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
 
             // Render any children views/widgets
             if (currentViewModel.hasOwnProperty('children')) {
-                currentViewModel.children.map(function (child) {
+                currentViewModel.children.map(function(child) {
                     self.render(child.id);
                 });
             }
 
-        }).fail(function (ex) {
+        }).fail(function(ex) {
             console.error(ex);
-        }).catch(function (ex) {
+        }).
+        catch (function(ex) {
             console.error(ex);
-        }).finally(function () { });
+        }).
+        finally(function() {});
 
-            // Immediately render any module marked with autoRender (usually navigation elements)
-            // if (viewmodel.hasOwnProperty('autoRender') && viewmodel.autoRender) {
-            //     self.render(viewmodel.id);
-            // }
+        // Immediately render any module marked with autoRender (usually navigation elements)
+        // if (viewmodel.hasOwnProperty('autoRender') && viewmodel.autoRender) {
+        //     self.render(viewmodel.id);
+        // }
 
-            // location.hash has a view id in it, and the current view matches it.  Render view.
-            // if (self.StarChart.currentLocation !== null && viewmodel.id === self.StarChart.currentLocation) {
-            //     self.render(viewmodel.id);
-            // }
+        // location.hash has a view id in it, and the current view matches it.  Render view.
+        // if (self.StarChart.currentLocation !== null && viewmodel.id === self.StarChart.currentLocation) {
+        //     self.render(viewmodel.id);
+        // }
 
-            // Nothing in the location.hash, and current view marked as default. Render view.
-            // if (self.StarChart.currentLocation === null && viewmodel.hasOwnProperty('defaultView') && viewmodel.defaultView) {
-            //     self.currentLocation = viewmodel.id;
-            //     self.render(viewmodel.id);
-            //     window.location.hash = viewmodel.id;
-            // }
+        // Nothing in the location.hash, and current view marked as default. Render view.
+        // if (self.StarChart.currentLocation === null && viewmodel.hasOwnProperty('defaultView') && viewmodel.defaultView) {
+        //     self.currentLocation = viewmodel.id;
+        //     self.render(viewmodel.id);
+        //     window.location.hash = viewmodel.id;
+        // }
     };
 
 
 
-    $galaxy.prototype.StarCharter = function () {
+    $galaxy.prototype.StarCharter = function() {
         var galaxy = this;
 
-        var StarChart = function () {
+        var StarChart = function() {
             this.routes = [];
             this.currentLocation = null;
+            this.smuggledPayload = null;
         };
 
-        StarChart.prototype.getRoutes = function () {
+        StarChart.prototype.getRoutes = function() {
             return this.routes;
         };
 
-        StarChart.prototype.addRoute = function (pattern, vmId, hash) {
+        StarChart.prototype.addRoute = function(pattern, vmId, hash) {
             this.routes[this.routes.length] = {
                 pattern: pattern,
                 viewModel: vmId,
@@ -295,7 +322,7 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             return this.routes;
         };
 
-        StarChart.prototype.warp = function (options) {
+        StarChart.prototype.warp = function(options) {
             var hashBuilder = [];
             var match;
             var targetLocation;
@@ -310,34 +337,35 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
                     targetLocation = options.location;
                 }
 
-                match = this.routes.filter(function (route) {
+                match = this.routes.filter(function(route) {
                     return route.pattern === targetLocation;
                 })[0];
 
-                hashBuilder[hashBuilder.length] = targetLocation;   // Start building the location hash
+                hashBuilder[hashBuilder.length] = targetLocation; // Start building the location hash
 
                 if (options.hasOwnProperty('payload') && options.payload) {
-                    this.currentPayload = options.payload;
-                    for (var key in options.payload) {    // Add each k/v pair as a URL hash parameter
-                        var param = options.payload[key];
-                        hashBuilder[hashBuilder.length] = '&' + key + '=' + param;
-                    }
+                    this.smuggledPayload = options.payload;
+                    // for (var key in options.payload) { // Add each k/v pair as a URL hash parameter
+                    //     var param = options.payload[key];
+                    //     hashBuilder[hashBuilder.length] = '&' + key + '=' + param;
+                    // }
                 }
 
-                window.location.hash = hashBuilder.join('');  // Set the location hash
+                window.location.hash = hashBuilder.join(''); // Set the location hash
             } catch (ex) {
-                console.error(ex);                
+                console.error(ex);
             }
 
             return match;
         };
 
-        StarChart.prototype.scan = function (pattern) {
+        StarChart.prototype.scan = function(pattern) {
             var self = this;
-            var moduleId, urlParamArray, currentPayload = {}, currentViewModel;
+            var totalPayload = {};
+            var moduleId, urlParamArray, currentViewModel;
 
             /*
-             *   Parse the location.hash to find the view id and any additional 
+             *   Parse the location.hash to find the view id and any additional
              *   key/value pairs in the URL parameters to pass to the view model
              */
             var locationHash = location.hash.split('#')[1] || '';
@@ -346,18 +374,18 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             if (locationHash !== '') {
                 urlParamArray = locationHash.split('/');
                 moduleId = urlParamArray[0];
-                urlParamArray.splice(0,1);
+                urlParamArray.splice(0, 1);
             }
 
             // Find any registered routes where the module name matches
-            var matches = self.routes.filter(function (route) {
+            var matches = self.routes.filter(function(route) {
                 return route.pattern.split('/')[0] === moduleId;
             }) || false;
 
             // If any module name matches, filter it further to any registered
             // routes with the same pattern length
             if (matches) {
-                matches = matches.filter(function (route) {
+                matches = matches.filter(function(route) {
                     return locationHash.split('/').length === route.pattern.split('/').length;
                 }) || false;
             }
@@ -365,45 +393,49 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             // TODO: If the pattern lengths match, need to compare each segment, ignore
             // the parameterized segments, and then each remaining segment needs to match
             // 1:1 between the route pattern and the hash pattern.
-            
-            // Create a data payload from the parameterized segments
-            if (matches && matches.length && urlParamArray.length) {
-                var _arguments = matches[0].pattern.split('/')
-                _arguments.splice(0,1);
 
-                for (var i=0, j=_arguments.length; i<=j, arg=_arguments[i]; i+=1) {
-                    if (arg.substr(0,1) === ':') {
-                        currentPayload[arg.substr(1, arg.length-1)] = urlParamArray[i];
+            // Create a data payload from the parameterized segments
+            if (matches && matches.length && urlParamArray && urlParamArray.length) {
+                var _arguments = matches[0].pattern.split('/')
+                _arguments.splice(0, 1);
+
+                for (var i = 0, j = _arguments.length; i <= j, arg = _arguments[i]; i += 1) {
+                    if (arg.substr(0, 1) === ':') {
+                        totalPayload[arg.substr(1, arg.length - 1)] = urlParamArray[i];
                     }
                 }
             }
 
             if (matches && matches.length) {
-                galaxy.render(matches[0].viewModel, currentPayload);
+                // Combine URL and smuggled payload
+                for(var goods in self.smuggledPayload) {
+                    totalPayload[goods] = self.smuggledPayload[goods];
+                }
+                galaxy.render(matches[0].viewModel, totalPayload);
             }
         };
 
         return new StarChart();
     };
 
-    $galaxy.prototype.depot = function () {
-        var Store = function () {
+    $galaxy.prototype.depot = function() {
+        var Store = function() {
             this.collection = ko.observableArray();
             this.proxy = null;
             this._dirty = false;
         };
 
-        Store.prototype.populate = function (force) {
+        Store.prototype.populate = function(force) {
             var deferred = Q.defer();
             var self = this;
 
-            if (!self._dirty && self.collection().length && !force) {  // Already populated and not dirty
+            if (!self._dirty && self.collection().length && !force) { // Already populated and not dirty
                 deferred.resolve();
-            } else if (!self._dirty || force) {              // Not dirty, but client forces population
-                self.proxy.load().then(function (models) {
+            } else if (!self._dirty || force) { // Not dirty, but client forces population
+                self.proxy.load().then(function(models) {
                     self.collection(models);
                     deferred.resolve();
-                }).fail(function (err) {
+                }).fail(function(err) {
                     console.log('Failed to load from remote proxy. ' + err.toString());
                     deferred.reject();
                 }).done();
@@ -414,29 +446,29 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             return deferred.promise;
         };
 
-        Store.prototype.isDirty = function () {
+        Store.prototype.isDirty = function() {
             return this._dirty;
         };
 
-        Store.prototype.sync = function () {
+        Store.prototype.sync = function() {
             var self = this;
 
-            self.collection.forEach(function (type) {
+            self.collection.forEach(function(type) {
                 if (type.hasOwnProperty("_local") && type._local) {
-                    self.proxy.save(type).then(function () {
+                    self.proxy.save(type).then(function() {
                         type._local = false;
-                    }).fail(function (err) {
+                    }).fail(function(err) {
                         console.error(err);
                     }).done();
                 }
             });
         };
 
-        Store.prototype.add = function (type) {
+        Store.prototype.add = function(type) {
             var self = this;
 
             if (type instanceof Array) {
-                type.forEach(function (item) {
+                type.forEach(function(item) {
                     self.collection.push(item);
                 });
             } else {
@@ -444,20 +476,20 @@ define(['q', 'knockout', 'postal'], function (Q, ko, postal) {
             }
         };
 
-        Store.prototype.empty = function () {
+        Store.prototype.empty = function() {
             this.collection.removeAll();
         };
 
-        Store.prototype.remove = function (item) {
-            var filtered = this.collection().filter(function (type) {
+        Store.prototype.remove = function(item) {
+            var filtered = this.collection().filter(function(type) {
                 return JSON.stringify(type) !== JSON.stringify(item);
             });
 
             this.collection(filtered);
         };
 
-        Store.prototype.removeById = function (id) {
-            var filtered = this.collection().filter(function (type) {
+        Store.prototype.removeById = function(id) {
+            var filtered = this.collection().filter(function(type) {
                 return type.id !== id;
             });
 

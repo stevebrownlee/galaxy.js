@@ -34,11 +34,33 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         self.network = postal.channel('galaxy');
         self.viewmodelDirectory = '/app/viewmodel';
         self.viewDirectory = '/app/view';
-        self.currentPayload = null;
         self.federation = [];
         self.currentLocation = null;
         self.StarChart = self.StarCharter();
+    };
 
+    $galaxy.prototype.warp = function(options) {
+        var self = this;
+        var warpParameters = {};
+
+        var engage = function () {
+            self.StarChart.warp(warpParameters);
+        };
+        
+        return {
+            to: function (location) {
+                warpParameters.location = location;
+                return {
+                    engage: engage,
+                    with: function (payload) {
+                        warpParameters.payload = payload;
+                        return {
+                            engage: engage
+                        }
+                    }
+                }
+            }
+        }
     };
 
     $galaxy.prototype.addRoute = function(pattern, vmId, hash) {
@@ -283,6 +305,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         var StarChart = function() {
             this.routes = [];
             this.currentLocation = null;
+            this.smuggledPayload = null;
         };
 
         StarChart.prototype.getRoutes = function() {
@@ -321,11 +344,11 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                 hashBuilder[hashBuilder.length] = targetLocation; // Start building the location hash
 
                 if (options.hasOwnProperty('payload') && options.payload) {
-                    this.currentPayload = options.payload;
-                    for (var key in options.payload) { // Add each k/v pair as a URL hash parameter
-                        var param = options.payload[key];
-                        hashBuilder[hashBuilder.length] = '&' + key + '=' + param;
-                    }
+                    this.smuggledPayload = options.payload;
+                    // for (var key in options.payload) { // Add each k/v pair as a URL hash parameter
+                    //     var param = options.payload[key];
+                    //     hashBuilder[hashBuilder.length] = '&' + key + '=' + param;
+                    // }
                 }
 
                 window.location.hash = hashBuilder.join(''); // Set the location hash
@@ -338,7 +361,8 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
         StarChart.prototype.scan = function(pattern) {
             var self = this;
-            var moduleId, urlParamArray, currentPayload = {}, currentViewModel;
+            var totalPayload = {};
+            var moduleId, urlParamArray, currentViewModel;
 
             /*
              *   Parse the location.hash to find the view id and any additional
@@ -377,16 +401,17 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
                 for (var i = 0, j = _arguments.length; i <= j, arg = _arguments[i]; i += 1) {
                     if (arg.substr(0, 1) === ':') {
-                        currentPayload[arg.substr(1, arg.length - 1)] = urlParamArray[i];
+                        totalPayload[arg.substr(1, arg.length - 1)] = urlParamArray[i];
                     }
                 }
             }
 
-            console.log('matches', matches);
-            console.log('currentPayload', currentPayload);
-
             if (matches && matches.length) {
-                galaxy.render(matches[0].viewModel, currentPayload);
+                // Combine URL and smuggled payload
+                for(var goods in self.smuggledPayload) {
+                    totalPayload[goods] = self.smuggledPayload[goods];
+                }
+                galaxy.render(matches[0].viewModel, totalPayload);
             }
         };
 
