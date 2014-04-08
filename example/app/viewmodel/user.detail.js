@@ -1,50 +1,66 @@
 define(['knockout', 'galaxy'],
     function(ko, $galaxy) {
-        var vm = function() {
-            var self = this;
+        var starbase = {};
 
-            /*
-             *  ==================================================================================
-             *   R E G I S T R A T I O N   S E C T I O N
-             *  ==================================================================================
-             */
-            self.id = 'user.detail';
-            self.templatePath = 'userdetail.html';
-            self.domBindingId = '#user-detail';
+        /*
+         ***************************************************************
+         *********  S T A R B A S E   R E G I S T R A T I O N  *********
+         ***************************************************************
 
-            self.UserStore = new $galaxy.depot();
+                                       U           
+                                      /_\          
+                                     [___]
+                                     :`:':           
+                                     `:::'           
+                              _       :_:       _    
+                            =[ ]      [%]      [ ]=  
+                             :=:      :=:      :=:   
+                            _|_|_   __| |__   _|_|_  
+                           / /XX|\ /__|_|__\ /|XX\ \
+                          / /XXX| | _/___\_ | |XXX\ \             
+                --===____/--===X|_|/_______\|_|X===--\____===-- 
+                 /__| |     /l_\\             //_|\     |_|__\
+                /~~.' |    /:'  \\   _____   //  `:\    | `.  \
+               /   | .'   / |    \\==|||||==//    | \   `. |   \   
+              /   .' |   / .'     |  |||||  |     `. \   | `.   \ 
+             /____|__|__/__|______l__|||||__l______|__\__|__|____\ 
 
-            /*
-             *  ==================================================================================
-             *   E V E N T   S U B S C R I P T I O N S
-             *  ==================================================================================
-             */
-            $galaxy.network.subscribe(self.id + '.docked', function(payload) {
-                console.log('user detail payload', payload);
-                
-            });
+         ***************************************************************
+         */
+        starbase.id = 'user.detail';
+        starbase.templatePath = 'userdetail.html';
+        starbase.domBindingId = '#user-detail';
 
-            self.showWelcome = function() {
-                $galaxy.StarChart.warp('home');
-            };
+        /*
+         *  ==================================================================================
+         *   G A L A C T I C   E V E N T   L I S T E N E R S
+         *  ==================================================================================
+         */
+        $galaxy.network.subscribe(starbase.id + '.docked', function(payload) {
+            console.log('user detail payload', payload);
+        });
 
-            self.showLocations = function() {
-                $galaxy.StarChart.warp('locations');
-            };
-
-            self.showProducts = function() {
-                $galaxy.StarChart.warp('products');
-            };
-
-            self.showUsers = function() {
-                $galaxy.StarChart.warp('users');
-            };
-
-            self.showUserDetails = function(user) {
-                console.log('show user details', user);
-                $galaxy.StarChart.warp('users/' + user.id);
-            };
+        /*
+         *  ==================================================================================
+         *   V I E W   M O D E L   F U N C T I O N S
+         *  ==================================================================================
+         */        
+        starbase.showWelcome = function() {
+            $galaxy.warp().to('home').engage();
         };
-        return new vm();
+
+        starbase.showLocations = function() {
+            $galaxy.warp().to('locations').engage();
+        };
+
+        starbase.showProducts = function() {
+            $galaxy.warp().to('products').engage();
+        };
+
+        starbase.showUsers = function() {
+            $galaxy.warp().to('users').engage();
+        };
+
+        return starbase;
     }
 );
