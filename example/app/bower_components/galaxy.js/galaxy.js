@@ -31,15 +31,38 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
     var $galaxy = function(options) {
         var self = this;
+
         self.network = postal.channel('galaxy');
         self.viewmodelDirectory = '/app/viewmodel';
         self.viewDirectory = '/app/view';
         self.federation = [];
         self.currentLocation = null;
-        self.StarChart = self.StarCharter();
+        self.StarChart = self.StarChartConstructor();
     };
 
-    $galaxy.prototype.warp = function(options) {
+    $galaxy.prototype.route = function (pattern) {
+        var self = this;
+        var routeParameters = {
+            pattern: pattern,
+            viewmodelId: null,
+            callback: null
+        };
+
+        return {
+            to: function (vmId) {
+                routeParameters.viewmodelId = vmId;
+                self.StarChart.addRoute(routeParameters);
+                return {
+                    then: function (callback) {
+                        routeParameters.callback = callback;
+                        self.StarChart.updateRoute(routeParameters);
+                    }
+                }
+            }
+        }
+    };
+
+    $galaxy.prototype.warp = function () {
         var self = this;
         var warpParameters = {};
 
@@ -299,30 +322,34 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
 
 
-    $galaxy.prototype.StarCharter = function() {
+    $galaxy.prototype.StarChartConstructor = function() {
         var galaxy = this;
 
-        var StarChart = function() {
+        var SpaceTime = function() {
             this.routes = [];
             this.currentLocation = null;
             this.smuggledPayload = null;
         };
 
-        StarChart.prototype.getRoutes = function() {
-            return this.routes;
+        SpaceTime.prototype.updateRoute = function(routeParameters) {
+            var matchedRoute = this.routes.filter(function (route) {
+                return route.pattern === routeParameters.pattern;
+            })[0];
+
+            matchedRoute.callback = routeParameters.callback;
         };
 
-        StarChart.prototype.addRoute = function(pattern, vmId, hash) {
+        SpaceTime.prototype.addRoute = function(routeParameters) {
             this.routes[this.routes.length] = {
-                pattern: pattern,
-                viewModel: vmId,
-                hash: hash
+                pattern: routeParameters.pattern,
+                viewModel: routeParameters.viewmodelId,
+                callback: routeParameters.callback
             };
 
             return this.routes;
         };
 
-        StarChart.prototype.warp = function(options) {
+        SpaceTime.prototype.warp = function(options) {
             var hashBuilder = [];
             var match;
             var targetLocation;
@@ -345,10 +372,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
                 if (options.hasOwnProperty('payload') && options.payload) {
                     this.smuggledPayload = options.payload;
-                    // for (var key in options.payload) { // Add each k/v pair as a URL hash parameter
-                    //     var param = options.payload[key];
-                    //     hashBuilder[hashBuilder.length] = '&' + key + '=' + param;
-                    // }
                 }
 
                 window.location.hash = hashBuilder.join(''); // Set the location hash
@@ -359,18 +382,19 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             return match;
         };
 
-        StarChart.prototype.scan = function(pattern) {
+        SpaceTime.prototype.scan = function(pattern) {
             var self = this;
             var totalPayload = {};
             var moduleId, urlParamArray, currentViewModel;
 
-            /*
-             *   Parse the location.hash to find the view id and any additional
-             *   key/value pairs in the URL parameters to pass to the view model
-             */
+            // Parse the location.hash to find the view id
             var locationHash = location.hash.split('#')[1] || '';
+
+            // Default the module id to the location hash (overridden below if needed)
             moduleId = locationHash;
 
+            // If there's more than one segment in the hash, parse them all out and
+            // redefine the module id as the first segment
             if (locationHash !== '') {
                 urlParamArray = locationHash.split('/');
                 moduleId = urlParamArray[0];
@@ -412,10 +436,13 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                     totalPayload[goods] = self.smuggledPayload[goods];
                 }
                 galaxy.render(matches[0].viewModel, totalPayload);
+                if (matches[0].callback !== null) {
+                    matches[0].callback.call();
+                }
             }
         };
 
-        return new StarChart();
+        return new SpaceTime();
     };
 
     $galaxy.prototype.depot = function() {
