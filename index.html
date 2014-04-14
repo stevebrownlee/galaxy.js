@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Galaxy.js by chortlehoort</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Galaxy.js</h1>
+          <h2>An AMD module for Knockout projects that allows you to inject HTML fragment templates on demand.</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/chortlehoort/galaxy.js/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/chortlehoort/galaxy.js/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/chortlehoort/galaxy.js" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="galaxyjs" class="anchor" href="#galaxyjs"><span class="octicon octicon-link"></span></a>galaxy.js</h1>
+
+<h2>
+<a name="a-lightweight-library-for-building-modular-browser-applications-with-require-and-knockout" class="anchor" href="#a-lightweight-library-for-building-modular-browser-applications-with-require-and-knockout"><span class="octicon octicon-link"></span></a>A lightweight library for building modular browser applications with Require and Knockout</h2>
+
+<p>galaxy.js was written to allow <a href="knockoutjs.com">Knockout</a> developers to inject HTML template fragments into the DOM on an as-needed basis. So instead of having all of the DOM elements downloaded to every client, only the bare minimum is sent to each client on the initial request, and as more views are accessed, only then does the additional DOM get downloaded and injected into the current document.</p>
+
+<p>galaxy.js was born from the stellar nursery of <a href="http://www.stackd.io/">stackd.io</a>. It is a utility I wrote that allows people writing single page applications (SPAs) with Knockout and <a href="requirejs.org">Require</a> to have a lightweight solution that gives them a modular application with DOM binding and ad-hoc DOM injection. It also utilizes the <a href="https://github.com/kriskowal/q">Q</a> library to implement Promises. For it's event system, I chose <a href="https://github.com/postaljs/postal.js">Postal.js</a> because it combines just the right amount of features while still having a small footprint.</p>
+
+<h1>
+<a name="running-the-example-application" class="anchor" href="#running-the-example-application"><span class="octicon octicon-link"></span></a>Running the example application</h1>
+
+<p>In the <code>example</code> directory, I put together a very quick SPA that displays four different views, each with its own view model, with some minimal data binding.</p>
+
+<h2>
+<a name="clone-the-repo" class="anchor" href="#clone-the-repo"><span class="octicon octicon-link"></span></a>Clone the repo</h2>
+
+<pre><code>mkdir ~/projects &amp;&amp; cd ~/projects
+git clone https://github.com/chortlehoort/galaxy.js.git
+</code></pre>
+
+<h2>
+<a name="install-node-if-you-dont-have-it" class="anchor" href="#install-node-if-you-dont-have-it"><span class="octicon octicon-link"></span></a>Install Node if you don't have it</h2>
+
+<pre><code>sudo apt-get install nodejs  # For Ubuntu and its ilk
+sudo yum install nodejs      # For CentOS and its ilk
+</code></pre>
+
+<p>This will also install <code>npm</code>, the Node package manager service as well. Then you can install a basic HTTP server.</p>
+
+<h2>
+<a name="install-a-basic-node-http-server" class="anchor" href="#install-a-basic-node-http-server"><span class="octicon octicon-link"></span></a>Install a basic Node HTTP server</h2>
+
+<p>The <code>http-server</code> module is just a very basic project that will serve static files from the directory of your choice.</p>
+
+<pre><code>sudo npm install -g http-server
+</code></pre>
+
+<h2>
+<a name="serve-the-application" class="anchor" href="#serve-the-application"><span class="octicon octicon-link"></span></a>Serve the application</h2>
+
+<p>Next, you go to the example application root folder and start the server.</p>
+
+<pre><code>cd ~/projects/galaxy.js/example
+http-server ./
+</code></pre>
+
+<p>Now you can browse to http://localhost:8081 and you should see a very basic welcome message.</p>
+
+<p>If you inspect the current DOM (right-click anywhere in the view and choose <code>Inspect Element</code>), you'll notice that only the <code>&lt;div id="welcome"&gt;</code> element contains child elements. This is because galaxy.js loaded a separate file named <code>views/welcome.html</code> and injected its contents into that element.</p>
+
+<p>The other elements <code>user-list</code>, <code>user-detail</code>, <code>location-list</code> and <code>location-detail</code> are still empty.</p>
+
+<p>Click on <code>Show Users</code> link and you'll be presented with another, very basic view with some additional links. If you inspect the DOM again, you'll see that the <code>user-list</code> element now contains child elements, and the <code>welcome</code> element is now hidden, but the content is still there, ready to be shown again when you click the <code>Home</code> link.</p>
+
+<p>Building a modular Knockout/Require application this way allows you to build up the DOM for each view (and even child views, or widgets) in separate HTML files and only inject them as needed.</p>
+
+<h1>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick Start</h1>
+
+<h2>
+<a name="create-a-project-directory" class="anchor" href="#create-a-project-directory"><span class="octicon octicon-link"></span></a>Create a project directory</h2>
+
+<p>Create a new directory for your application.</p>
+
+<pre><code>mkdir ~/projects/intergalactic &amp;&amp; cd ~/projects/intergalactic
+</code></pre>
+
+<h2>
+<a name="install-bower-and-components" class="anchor" href="#install-bower-and-components"><span class="octicon octicon-link"></span></a>Install Bower and components</h2>
+
+<pre><code>npm install -g bower
+</code></pre>
+
+<p>Once Bower installation is complete, you need to use it to grab all the required components. For galaxy.js projects, that's just require.js and knockout.js. </p>
+
+<pre><code>bower install requirejs knockoutjs galaxyjs
+</code></pre>
+
+<h2>
+<a name="create-the-base-dom" class="anchor" href="#create-the-base-dom"><span class="octicon octicon-link"></span></a>Create the base DOM</h2>
+
+<p>Now you can start coding. The first step is to create the base DOM that galaxy.js will use to inject the DOM of your views. The only requirement is that you use require.js. So create a <code>index.html</code> file and put in the following code.</p>
+
+<pre><code>&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+    &lt;head&gt;
+        &lt;title&gt;galaxy.js&lt;/title&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+        &lt;div id="welcome"&gt;&lt;/div&gt;
+    &lt;/body&gt;
+
+    &lt;script data-main="app/application" src="app/bower_components/requirejs/require.js"&gt;&lt;/script&gt;
+&lt;/html&gt;
+</code></pre>
+
+<h2>
+<a name="create-a-view-template" class="anchor" href="#create-a-view-template"><span class="octicon octicon-link"></span></a>Create a view template</h2>
+
+<h2>
+<a name="construct-a-star-base" class="anchor" href="#construct-a-star-base"><span class="octicon octicon-link"></span></a>Construct a star base</h2>
+
+<h3>
+<a name="the-galactic-registry" class="anchor" href="#the-galactic-registry"><span class="octicon octicon-link"></span></a>The galactic registry</h3>
+
+<h3>
+<a name="listen-to-galactic-communication" class="anchor" href="#listen-to-galactic-communication"><span class="octicon octicon-link"></span></a>Listen to galactic communication</h3>
+
+<h2>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<h3>
+<a name="setting-up-galactic-routes" class="anchor" href="#setting-up-galactic-routes"><span class="octicon octicon-link"></span></a>Setting up galactic routes</h3>
+
+<h3>
+<a name="creating-your-galaxy" class="anchor" href="#creating-your-galaxy"><span class="octicon octicon-link"></span></a>Creating your galaxy</h3>
+
+<h2>
+<a name="warping-spacetime-to-visit-star-bases" class="anchor" href="#warping-spacetime-to-visit-star-bases"><span class="octicon octicon-link"></span></a>Warping spacetime to visit star bases</h2>
+
+<p>In galaxy, there is a function named <code>StarChartConstructor</code></p>
+
+<ol>
+<li>Add links to view template</li>
+<li>Handle link clicks in view model</li>
+<li>Usage 1 (no payload) <code>$galaxy.warp().to('users').engage();</code>
+</li>
+<li>Usage 2 (smuggled payload) <code>$galaxy.warp().to('userdetail').with({user: user}).engage();</code>
+</li>
+<li>Usage 3 (url + smuggled payload) <code>$galaxy.warp().to('product/'+product.id).with({product: product}).engage();</code>
+</li>
+</ol>
+        </section>
+
+        <footer>
+          Galaxy.js is maintained by <a href="https://github.com/chortlehoort">chortlehoort</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
