@@ -1,0 +1,41 @@
+{
+  "name": "galaxy.js",
+  "main": "galaxy.js",
+  "version": "0.4.0",
+  "dependencies": {
+    "jquery": "~2.0.3",
+    "q": "~0.9.7",
+    "underscore": "~1.6.0",
+    "postal.js": "~0.8.11",
+    "requirejs": "~2.1.11",
+    "knockoutjs": "~3.1.0"
+  },
+  "homepage": "https://github.com/chortlehoort/galaxy.js",
+  "authors": [
+    "Steve Brownlee <chortlehoort@gmail.com>"
+  ],
+  "description": "A lightweight library for building modular browser applications with Require and Knockout",
+  "moduleType": [
+    "amd"
+  ],
+  "keywords": [
+    "galaxy",
+    "knockout",
+    "require",
+    "amd",
+    "html",
+    "templates",
+    "injection"
+  ],
+  "license": "Apache 2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "resolutions": {
+    "underscore": "~1.6.0"
+  }
+}

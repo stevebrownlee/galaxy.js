@@ -30,14 +30,12 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
     };
 
     var $galaxy = function(options) {
-        var self = this;
-
-        self.network = postal.channel('galaxy');
-        self.viewmodelDirectory = '/app/viewmodel';
-        self.viewDirectory = '/app/view';
-        self.federation = [];
-        self.currentLocation = null;
-        self.StarChart = self.StarChartConstructor();
+        this.network = postal.channel('galaxy');
+        this.viewmodelDirectory = '/app/viewmodel';
+        this.viewDirectory = '/app/view';
+        this.federation = [];
+        this.currentLocation = null;
+        this.StarChart = this.StarChartConstructor();
     };
 
     $galaxy.prototype.route = function (pattern) {

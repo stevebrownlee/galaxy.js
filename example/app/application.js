@@ -5,7 +5,7 @@ requirejs.config({
         'q': 'bower_components/q/q.min',
         'underscore': 'bower_components/underscore/underscore',
         'postal': 'bower_components/postal.js/lib/postal.min',
-        'galaxy': 'bower_components/galaxy.js/galaxy',
+        'galaxy': 'bower_components/galaxy.js/galaxy.min',
     }
 });
 

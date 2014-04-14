@@ -49,11 +49,31 @@ Create a new directory for your application.
 
     mkdir ~/projects/intergalactic && cd ~/projects/intergalactic
 
-## Install [Bower](http://bower.io/) and galaxy.js
+## Install Bower and components
 
-    npm install -g bower galaxy.js
+    npm install -g bower
+
+Once Bower installation is complete, you need to use it to grab all the required components. For galaxy.js projects, that's just require.js and knockout.js. 
+
+    bower install requirejs knockoutjs galaxyjs
 
 ## Create the base DOM
+
+Now you can start coding. The first step is to create the base DOM that galaxy.js will use to inject the DOM of your views. The only requirement is that you use require.js. So create a `index.html` file and put in the following code.
+
+    <!DOCTYPE HTML>
+    <html>
+        <head>
+            <title>galaxy.js</title>
+        </head>
+
+        <body>
+            <div id="welcome"></div>
+        </body>
+
+        <script data-main="app/application" src="app/bower_components/requirejs/require.js"></script>
+    </html>
+
 
 ## Create a view template
 
@@ -69,7 +89,8 @@ Create a new directory for your application.
 
 ### Creating your galaxy
 
-## Transporting users between star bases
+## Warping spacetime to visit star bases
+In galaxy, there is a function named `StarChartConstructor`
 
 1. Add links to view template
 1. Handle link clicks in view model
