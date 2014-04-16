@@ -75,11 +75,11 @@ sudo yum install nodejs      # For CentOS and its ilk
 
 <p>Next, you go to the example application root folder and start the server.</p>
 
-<pre><code>cd ~/projects/galaxy.js/example
+<pre><code>cd ~/projects/galaxy.js/example/public
 http-server ./
 </code></pre>
 
-<p>Now you can browse to http://localhost:8081 and you should see a very basic welcome message.</p>
+<p>Now you can browse to http://localhost:8081 (or whichever port it reports it is using) and you should see a very basic welcome message.</p>
 
 <p>If you inspect the current DOM (right-click anywhere in the view and choose <code>Inspect Element</code>), you'll notice that only the <code>&lt;div id="welcome"&gt;</code> element contains child elements. This is because galaxy.js loaded a separate file named <code>views/welcome.html</code> and injected its contents into that element.</p>
 
@@ -97,24 +97,32 @@ http-server ./
 
 <p>Create a new directory for your application.</p>
 
-<pre><code>mkdir ~/projects/intergalactic &amp;&amp; cd ~/projects/intergalactic
+<pre><code>mkdir ~/projects/intergalactic
+cd ~/projects/intergalactic
+mkdir public
+cd public
 </code></pre>
 
 <h2>
-<a name="install-bower-and-components" class="anchor" href="#install-bower-and-components"><span class="octicon octicon-link"></span></a>Install Bower and components</h2>
+<a name="install-bower-and-dependencies" class="anchor" href="#install-bower-and-dependencies"><span class="octicon octicon-link"></span></a>Install Bower and dependencies</h2>
 
 <pre><code>npm install -g bower
 </code></pre>
 
-<p>Once Bower installation is complete, you need to use it to grab all the required components. For galaxy.js projects, that's just require.js and knockout.js. </p>
+<h3>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h3>
 
-<pre><code>bower install requirejs knockoutjs galaxyjs
+<p>Once Bower installation is complete, you need to use it to grab all the required components. </p>
+
+<pre><code>bower install requirejs knockoutjs q postal.js galaxy.js --save
 </code></pre>
+
+<p>If you're not familiar with Bower, the <code>--save</code> flag will automatically create a <code>bower.json</code> file with the name and version of each Bower component you installed.</p>
 
 <h2>
 <a name="create-the-base-dom" class="anchor" href="#create-the-base-dom"><span class="octicon octicon-link"></span></a>Create the base DOM</h2>
 
-<p>Now you can start coding. The first step is to create the base DOM that galaxy.js will use to inject the DOM of your views. The only requirement is that you use require.js. So create a <code>index.html</code> file and put in the following code.</p>
+<p>Now you can start coding. The first step is to create the base DOM that galaxy.js will use to inject the DOM of your views. The only requirement is that you use require.js. So create a <code>public/index.html</code> file and put in the following code.</p>
 
 <pre><code>&lt;!DOCTYPE HTML&gt;
 &lt;html&gt;
@@ -131,41 +139,375 @@ http-server ./
 </code></pre>
 
 <h2>
-<a name="create-a-view-template" class="anchor" href="#create-a-view-template"><span class="octicon octicon-link"></span></a>Create a view template</h2>
+<a name="create-requirejs-application-file" class="anchor" href="#create-requirejs-application-file"><span class="octicon octicon-link"></span></a>Create require.js application file</h2>
+
+<p>Create a file named <code>public/application.js</code>. This is needed by require.js so that it knows where all the libraries that you want to use are located. For galaxy.js, we need Knockout, Underscore (used by require), postal.js, Q, and of course galaxy.js. Here's an example application file, but you can suit to your environment and needs.</p>
+
+<hr><h6>
+<a name="file-publicapplicationjs" class="anchor" href="#file-publicapplicationjs"><span class="octicon octicon-link"></span></a>File: public/application.js</h6>
+
+<pre><code>requirejs.config({
+   paths: {
+        'knockout': 'bower_components/knockout.js/knockout',
+        'q': 'bower_components/q/q.min',
+        'underscore': 'bower_components/underscore/underscore',
+        'postal': 'bower_components/postal.js/lib/postal.min',
+        'galaxy': 'bower_components/galaxy.js/galaxy.min'
+    }
+});
+
+require([], function () {
+
+});
+</code></pre>
+
+<hr><h2>
+<a name="create-a-view" class="anchor" href="#create-a-view"><span class="octicon octicon-link"></span></a>Create a view</h2>
+
+<p>Now we can create some HTML in a new file named <code>public/view/welcome.html</code> and it will contain the markup that we want to be visible when the user is on the Welcome page.</p>
+
+<p>So create that file and put the following simple code in it.</p>
+
+<h6>
+<a name="file-publicviewwelcomehtml" class="anchor" href="#file-publicviewwelcomehtml"><span class="octicon octicon-link"></span></a>File: public/view/welcome.html</h6>
+
+<pre><code>&lt;h1&gt;Welcome to galaxy.js&lt;/h1&gt;
+&lt;div&gt;
+    &lt;a href='#' data-bind='click: showUsers'&gt;Show Users&lt;/a&gt;
+&lt;/div&gt;
+</code></pre>
 
 <h2>
-<a name="construct-a-star-base" class="anchor" href="#construct-a-star-base"><span class="octicon octicon-link"></span></a>Construct a star base</h2>
+<a name="create-a-view-model-aka-a-star-base" class="anchor" href="#create-a-view-model-aka-a-star-base"><span class="octicon octicon-link"></span></a>Create a view model (a.k.a. a Star Base)</h2>
+
+<p>Now, the way Knockout works is having view models that control what the user sees on each view, and what will happen when the user interacts with elements on a particular view. The view model can be a simple object, or function, that returns some properties and methods.</p>
+
+<p>Galaxy.js also is modular by default, using the require.js library to break the application up into modules. So let's create a basic module.</p>
+
+<hr><h6>
+<a name="file-publicviewmodelwelcomejs" class="anchor" href="#file-publicviewmodelwelcomejs"><span class="octicon octicon-link"></span></a>File: public/viewmodel/welcome.js</h6>
+
+<pre><code>define(function() {
+        var starbase = {};
+
+        starbase.showUsers = function() {
+            console.log('User clicked on user link');
+        };
+
+        return starbase;
+    }
+);
+</code></pre>
+
+<p>As you can see this view model returns a very simple object. It has one function that will log a message to the console. This <code>starbase.showUsers</code> function, for those who are familiar with Knockout already know, is bound by Knockout to the <code>data-bind='click: showUsers'</code> directive in our <code>welcome.html</code> template.</p>
+
+<p>When the user clicks on that link, a message will be logged to the console.</p>
 
 <h3>
 <a name="the-galactic-registry" class="anchor" href="#the-galactic-registry"><span class="octicon octicon-link"></span></a>The galactic registry</h3>
 
+<p>To work within galaxy.js, each view model  needs to have three (3) properties set on it that are required in order for each it to be successfully registered in the Galactic Federation - which is just an array used internally by galaxy.js to keep track of which view models have already been identified.</p>
+
+<ol>
+<li>
+<strong>id</strong> - This is the unique identifier for the view model for galaxy.js to use</li>
+<li>
+<strong>templatePath</strong> - This is the path to the file containing the HTML for the view that this model is bound to. In this example case, it would be <code>welcome.html</code>.</li>
+<li>
+<strong>domBindingId</strong> - This specified which DOM element id that the HTML contained in the bound template will be injected into. In this example case, it would be <code>#welcome</code>. This means that once <code>welcome.html</code> is loaded, its contents will be put inside of the <code>&lt;div id="welcome"&gt;</code> element that we put in <code>index.html</code>.</li>
+</ol><p>Here's what the view model should looks like to have it work with galaxy.js.</p>
+
+<pre><code>define(['galaxy'],       // Use require.js to import galaxy.js
+    function($galaxy) {  // Add the argument to the import function
+        var starbase = {};
+
+       /*
+         *********************************************************
+         ******  S T A R B A S E   R E G I S T R A T I O N  ******
+         *********************************************************
+        */
+        starbase.id = 'welcome';
+        starbase.templatePath = 'welcome.html';
+        starbase.domBindingId = '#welcome';
+
+       /*
+        *  =======================================================
+        *   V I E W   M O D E L   F U N C T I O N S
+        *  =======================================================
+        */        
+        starbase.showUsers = function() {
+            console.log('User clicked on user link');
+        };
+
+        return starbase;
+    }
+);
+</code></pre>
+
 <h3>
 <a name="listen-to-galactic-communication" class="anchor" href="#listen-to-galactic-communication"><span class="octicon octicon-link"></span></a>Listen to galactic communication</h3>
 
-<h2>
+<p>galaxy.js uses <a href="https://github.com/postaljs/postal.js">postal.js</a> to set up an event channel for your application to listen for specific events that happen during the lifetime of your view model. Also, you can use this channel to broadcast your own, custom events for your application. This channel is exposed to view models as the <code>network</code> property on the galaxy library.</p>
+
+<h4>
+<a name="joined-standard-event" class="anchor" href="#joined-standard-event"><span class="octicon octicon-link"></span></a>.joined() standard event</h4>
+
+<p>Once your view model has been added to the Galactic Federation, galaxy.js will broadcast the <code>joined()</code> event, prepended withe the view model's id that you can subscribe to. Here's how to subscribe to that event for a view model with an id of <strong>welcome</strong>.</p>
+
+<pre><code>$galaxy.network.subscribe('welcome.joined', function () {
+
+});
+</code></pre>
+
+<h4>
+<a name="bound-standard-event" class="anchor" href="#bound-standard-event"><span class="octicon octicon-link"></span></a>.bound() standard event</h4>
+
+<p>After the template for a view model is loaded, and bound to the view model by Knockout, galaxy.js will broadcast the <code>bound()</code> event, prepended withe the view model's id that you can subscribe to. Here's how to subscribe to that event for a view model with an id of <strong>welcome</strong>.</p>
+
+<pre><code>$galaxy.network.subscribe('welcome.bound', function () {
+
+});
+</code></pre>
+
+<h4>
+<a name="docked-standard-event" class="anchor" href="#docked-standard-event"><span class="octicon octicon-link"></span></a>.docked() standard event</h4>
+
+<p>The event that you will be using most often is <code>docked()</code>. This event is broadcast after the entire life cycle is complete for showing a view. The view exists in the Federation, the corresponding HTML template has been loaded and bound to the view model, the current view has been made visible, and all other views have been hidden.</p>
+
+<p>This event also carries the entire data payload for the view. The payload will be discussed more below in the routing and warping sections, but, briefly, the payload will contain any URL parameter data, and any further data that you specify when navigating to a specific view.</p>
+
+<p>So let's look at an updated Star Base (view model) that listens for when it's been rendered and made visible to the user.</p>
+
+<hr><pre><code>define(['galaxy'],       // Use require.js to import galaxy.js
+    function($galaxy) {  // Add the argument to the import function
+        var starbase = {};
+
+       /*
+         *********************************************************
+         ******  S T A R B A S E   R E G I S T R A T I O N  ******
+         *********************************************************
+        */
+        starbase.id = 'welcome';
+        starbase.templatePath = 'welcome.html';
+        starbase.domBindingId = '#welcome';
+
+        /*
+         *  ======================================================
+         *   G A L A C T I C   E V E N T   L I S T E N E R S
+         *  ======================================================
+         */
+        $galaxy.network.subscribe('welcome.docked', function (payload) {
+            if (payload.hasOwnProperty('user') &amp;&amp; payload.user.hasOwnProperty('id')) {
+                starbase.showWelcomeMessage();
+            }
+        });
+
+       /*
+        *  =======================================================
+        *   V I E W   M O D E L   F U N C T I O N S
+        *  =======================================================
+        */        
+        starbase.showUsers = function() {
+            console.log('User clicked on user link');
+        };
+
+        starbase.showWelcomeMessage = function() {
+            // Do something more interesting than log to console
+            console.log('Welcome to galaxy.js');
+        };
+
+        return starbase;
+    }
+);
+</code></pre>
+
+<hr><h2>
 <a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h2>
+
+<p>Now that you have a basic view, and a view model that handles interactions and data binding, it's time to start configuring your Galaxy so that it will start working.</p>
 
 <h3>
 <a name="setting-up-galactic-routes" class="anchor" href="#setting-up-galactic-routes"><span class="octicon octicon-link"></span></a>Setting up galactic routes</h3>
 
-<h3>
+<p>The routing in galaxy.js is straightforward and simple. You define what string patterns to look for in the URL hash, and when any of those patterns are detected by galaxy.js, the corresponding view model is loaded, if it hasn't been already, and the view is made visible and the <code>viewModelId.docked()</code> method is fired.</p>
+
+<h4>
+<a name="basic-route" class="anchor" href="#basic-route"><span class="octicon octicon-link"></span></a>Basic route</h4>
+
+<p>Here's how to set up a basic route.</p>
+
+<pre><code>$galaxy.route('home').to('welcome');
+</code></pre>
+
+<p>For this route, when galaxy.js detects a URL hash value like <code>http://localhost/#home</code>, then it will try to load and register a view model named <code>welcome.js</code> from your view model directory (see below for defining that).</p>
+
+<p>You may also specify a callback function in the routing directive, using the <code>.then()</code> chained function, if you want something specific to happen every time that a particular view is docked.</p>
+
+<pre><code>    $galaxy.route('users').to('user.list').then(function () {
+        console.log('User list has been docked into the viewport');
+    });
+</code></pre>
+
+<h4>
+<a name="route-with-parameters" class="anchor" href="#route-with-parameters"><span class="octicon octicon-link"></span></a>Route with parameters</h4>
+
+<p>You can also specify some variable route segments by prepending them with a colon. For example, if you want a URL hash in the format of <code>#users/1/</code> to mean "show a user profile whose <code>id</code> value is 1", you can set up parameterized route segments like this.</p>
+
+<pre><code>$galaxy.route('users/:id').to('user.details');
+</code></pre>
+
+<p>So anytime the string <code>users</code> is detected, following by another segment, whatever string is in that segment will be assigned to an <code>id</code> key and delivered as a payload to the view model when the <code>docked()</code> event is published. Here's how you would access that variable in the view model.</p>
+
+<pre><code>$galaxy.network.subscribe('user.details.docked', function (payload) {
+    console.log(payload.id);  // This would output '1' in the console
+});
+</code></pre>
+
+<h4>
+<a name="example" class="anchor" href="#example"><span class="octicon octicon-link"></span></a>Example</h4>
+
+<p>The best place to set your base routes is in your Require initialization file. Here's what it would look like with some basic routes set up.</p>
+
+<hr><h6>
+<a name="file-publicapplicationjs-1" class="anchor" href="#file-publicapplicationjs-1"><span class="octicon octicon-link"></span></a>File: public/application.js</h6>
+
+<pre><code>requirejs.config({
+   paths: {
+        'knockout': 'bower_components/knockout.js/knockout',
+        'q': 'bower_components/q/q.min',
+        'underscore': 'bower_components/underscore/underscore',
+        'postal': 'bower_components/postal.js/lib/postal.min',
+        'galaxy': 'bower_components/galaxy.js/galaxy.min'
+    }
+});
+
+require(['galaxy'], function ($galaxy) {
+
+    // Add some routing directives
+    $galaxy.route('home').to('welcome');
+    $galaxy.route('users').to('user.list');
+    $galaxy.route('users/:id').to('user.detail');
+    $galaxy.route('users/:id/edit').to('user.edit');
+});
+</code></pre>
+
+<hr><h3>
 <a name="creating-your-galaxy" class="anchor" href="#creating-your-galaxy"><span class="octicon octicon-link"></span></a>Creating your galaxy</h3>
+
+<p>Now you're ready to have a working galaxy. The only configuration parameters that galaxy.js needs is the location for the views, and view models. Once you call the <code>create()</code> method with these parameters, galaxy.js is ready to go.  Again, the best place to start your galaxy is in the Require application file, so here's what it would look like.</p>
+
+<hr><h6>
+<a name="file-publicapplicationjs-2" class="anchor" href="#file-publicapplicationjs-2"><span class="octicon octicon-link"></span></a>File: public/application.js</h6>
+
+<pre><code>requirejs.config({
+   paths: {
+        'knockout': 'bower_components/knockout.js/knockout',
+        'q': 'bower_components/q/q.min',
+        'underscore': 'bower_components/underscore/underscore',
+        'postal': 'bower_components/postal.js/lib/postal.min',
+        'galaxy': 'bower_components/galaxy.js/galaxy.min'
+    }
+});
+
+require(['galaxy'], function ($galaxy) {
+    // Set up your application route handlers
+    $galaxy.route('home').to('welcome');
+    $galaxy.route('users').to('user.list');
+    $galaxy.route('users/:id').to('user.detail');
+    $galaxy.route('users/:id/edit').to('user.edit');
+
+    // Initialize the galaxy library
+    $galaxy.create({
+        viewmodelDirectory: '/viewmodel',
+        viewDirectory: '/view'
+    });
+});
+</code></pre>
+
+<hr><p>Now you have a basic, working galaxy, meaning you can now type something like <code>http://localhost:8081/#welcome</code> into the address bar and it will properly load the <code>welcome.js</code> view model, the <code>welcome.html</code> view, and then inject the HTML into your base DOM and make it visible. The last piece of the puzzle is how to navigate programmatically between the views. You do this by warping spacetime to travel between star bases.</p>
 
 <h2>
 <a name="warping-spacetime-to-visit-star-bases" class="anchor" href="#warping-spacetime-to-visit-star-bases"><span class="octicon octicon-link"></span></a>Warping spacetime to visit star bases</h2>
 
-<p>In galaxy, there is a function named <code>StarChartConstructor</code></p>
+<p>To move between views in galaxy.js, you use the <code>warp()</code> method.</p>
 
-<ol>
-<li>Add links to view template</li>
-<li>Handle link clicks in view model</li>
-<li>Usage 1 (no payload) <code>$galaxy.warp().to('users').engage();</code>
-</li>
-<li>Usage 2 (smuggled payload) <code>$galaxy.warp().to('userdetail').with({user: user}).engage();</code>
-</li>
-<li>Usage 3 (url + smuggled payload) <code>$galaxy.warp().to('product/'+product.id).with({product: product}).engage();</code>
-</li>
-</ol>
+<h3>
+<a name="basic-navigation" class="anchor" href="#basic-navigation"><span class="octicon octicon-link"></span></a>Basic navigation</h3>
+
+<p>To show/load a different view when a user clicks on a link, or some other interaction, you specify which star base you want to travel to by providing the corresponding route pattern you set up to direct travellers to the star base, and then engage your warp engines.</p>
+
+<pre><code>$galaxy.warp().to('home').engage();
+</code></pre>
+
+<h3>
+<a name="navigation-with-a-payload" class="anchor" href="#navigation-with-a-payload"><span class="octicon octicon-link"></span></a>Navigation with a payload</h3>
+
+<p>If you want to pass in data to the target star base, you add the optional method of <code>with()</code>, and the data as the argument, before engaging your warp engine.</p>
+
+<p>Let's assume you set up a route like this.</p>
+
+<pre><code>$galaxy.route('users/:id').to('user.detail');
+</code></pre>
+
+<p>You could then warp to that destination with a payload.</p>
+
+<pre><code>var user = {
+    id: 1,
+    firstname: 'James',
+    lastname: 'Kirk'
+};
+$galaxy.warp().to('users/' + user.id).with({user: user}).engage();
+</code></pre>
+
+<p>Then the target star base can accept that payload when it subscribes to the docked() event. Also, remember that URL parameters are also captured and put in the data payload for the docked() event. So in addition to the user object being in the payload, there will also be an additional key named id with a value of 1. Here's what the payload would look like from the above example.</p>
+
+<pre><code>{
+    id: 1,
+    user: {
+        id: 1,
+        firstname: 'James',
+        lastname: 'Kirk'
+    }
+}
+</code></pre>
+
+<p>So here's a basic example of how to capture that data and log it to the console.</p>
+
+<h6>
+<a name="file-userdetailjs" class="anchor" href="#file-userdetailjs"><span class="octicon octicon-link"></span></a>File: user.detail.js</h6>
+
+<hr><pre><code>define(['galaxy'],
+    function($galaxy) {
+        var starbase = {};
+
+       /*
+         *********************************************************
+         ******  S T A R B A S E   R E G I S T R A T I O N  ******
+         *********************************************************
+        */
+        starbase.id = 'users';
+        starbase.templatePath = 'user.detail.html';
+        starbase.domBindingId = '#user-detail';
+
+        /*
+         *  ======================================================
+         *   G A L A C T I C   E V E N T   L I S T E N E R S
+         *  ======================================================
+         */
+        $galaxy.network.subscribe('users.docked', function (payload) {
+            // This is the object you specified in with() above
+            console.log(payload.user);
+
+            // This is the captured URL parameter
+            console.log(payload.id);
+        });
+
+        return starbase;
+    }
+);
+</code></pre>
+
+<hr>
         </section>
 
         <footer>
