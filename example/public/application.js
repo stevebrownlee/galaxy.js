@@ -1,6 +1,5 @@
 requirejs.config({
    paths: {
-        'jquery': 'bower_components/jquery/jquery.min',
         'knockout': 'bower_components/knockout.js/knockout',
         'q': 'bower_components/q/q.min',
         'underscore': 'bower_components/underscore/underscore',
@@ -27,7 +26,7 @@ require(['galaxy'], function ($galaxy) {
 
     // Initialize the galaxy library
     $galaxy.create({
-        viewmodelDirectory: '/app/viewmodel',
-        viewDirectory: '/app/view'
+        viewmodelDirectory: '/viewmodel',
+        viewDirectory: '/view'
     });
 });
