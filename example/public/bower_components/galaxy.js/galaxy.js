@@ -39,7 +39,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
     };
 
     $galaxy.prototype.route = function (pattern) {
-        var self = this;
         var routeParameters = {
             pattern: pattern,
             viewmodelId: null,
@@ -49,24 +48,23 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         return {
             to: function (vmId) {
                 routeParameters.viewmodelId = vmId;
-                self.StarChart.addRoute(routeParameters);
+                this.StarChart.addRoute(routeParameters);
                 return {
                     then: function (callback) {
                         routeParameters.callback = callback;
-                        self.StarChart.updateRoute(routeParameters);
-                    }
+                        this.StarChart.updateRoute(routeParameters);
+                    }.bind(this)
                 }
-            }
+            }.bind(this)
         }
     };
 
     $galaxy.prototype.warp = function () {
-        var self = this;
         var warpParameters = {};
 
         var engage = function () {
-            self.StarChart.warp(warpParameters);
-        };
+            this.StarChart.warp(warpParameters);
+        }.bind(this);
         
         return {
             to: function (location) {
@@ -89,23 +87,21 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
     };
 
     $galaxy.prototype.create = function(options) {
-        var self = this;
-
         if (options) {
-            self.setOptions(options);
+            this.setOptions(options);
         }
 
         // Handle errors when require tries to load a view model id that is invalid
-        requirejs.onError = function(err) {
-            console.error(new MissingViewModelException('Unable to find the location of `' + self.currentLocation + '.js`. ' + err.message));
-        };
+        requirejs.onError = function RequireErrorHandler (err) {
+            console.error(new MissingViewModelException('Unable to find the location of `' + this.currentLocation + '.js`. ' + err.message));
+        }.bind(this);
 
-        self.StarChart.scan();
+        this.StarChart.scan();
 
         // Detect when the hash changes
-        window.addEventListener('popstate', function(event) {
-            self.StarChart.scan();
-        });
+        window.addEventListener('popstate', function PopStateHandler (event) {
+            this.StarChart.scan();
+        }.bind(this));
     };
 
     $galaxy.prototype.setOptions = function(options) {
@@ -149,9 +145,8 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
 
     $galaxy.prototype.loadViewModel = function(id) {
-        var self = this;
         var deferred = Q.defer();
-        var matchFound = self.federation.filter(function(model) {
+        var matchFound = this.federation.filter(function(model) {
             return model.id === id;
         })[0];
 
@@ -160,10 +155,10 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             console.warn(new UnregisteredViewWarning('Location with id `' + id + '` has not joined the federation. Attempting to join in now.'));
 
             // Require the view model
-            require([self.viewmodelDirectory + '/' + id + '.js'], function(vm) {
-                self.join(vm);
+            require([this.viewmodelDirectory + '/' + id + '.js'], function requireViewModel (vm) {
+                this.join(vm);
                 deferred.resolve(vm);
-            });
+            }.bind(this));
         } else {
             deferred.resolve(matchFound);
         }
@@ -171,9 +166,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         return deferred.promise;
     };
 
-    $galaxy.prototype.join = function(viewmodel) {
-        var self = this;
-
+    $galaxy.prototype.join = function (viewmodel) {
         if (!viewmodel.hasOwnProperty('__joined')) {
             // If a view model defined any children, join them first, and mark them as children
             if (viewmodel.hasOwnProperty('children') && viewmodel.children.length > 0) {
@@ -189,14 +182,14 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
             // Give each model a show method that delegates to the internal join() function
             if (!viewmodel.hasOwnProperty('show')) {
-                viewmodel.show = function() {
-                    self.render(this.id);
-                };
+                viewmodel.show = function () {
+                    this.render(viewModel.id);
+                }.bind(this);
             }
 
             // Add the viewmodel to the internal registry
             viewmodel.__joined = true;
-            self.federation.push(viewmodel);
+            this.federation.push(viewmodel);
             this.network.publish(viewmodel.id + '.joined');
 
         } else {
@@ -219,10 +212,9 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         }
     };
 
-    $galaxy.prototype.loadTemplate = function(id) {
-        var self = this;
+    $galaxy.prototype.loadTemplate = function (id) {
         var deferred = Q.defer();
-        var viewmodel = self.federation.filter(function(vm) {
+        var viewmodel = this.federation.filter(function (vm) {
             return vm.id === id;
         })[0];
 
@@ -230,21 +222,21 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             if (!viewmodel.__loaded) {
                 var viewTemplate = [this.viewDirectory, '/', viewmodel.templatePath].join('');
 
-                self.getDOMElements(viewmodel.domBindingId).forEach(function(el) {
+                this.getDOMElements(viewmodel.domBindingId).forEach(function (el) {
                     var xhr = new XMLHttpRequest(); // Create XHR object
                     xhr.open('GET', viewTemplate, true); // GET the HTML file for the view model
-                    xhr.onloadend = function(evt) { // After it's loaded
+                    xhr.onloadend = function viewTemplateLoadEnd (evt) { // After it's loaded
                         if (evt.target.status === 200 || evt.target.status === 302) {
                             el.innerHTML = evt.target.responseText; // Inject the HTML
                             ko.applyBindings(viewmodel, el); // Bind view model to DOM
                             viewmodel.__loaded = true; // Flag view model as loaded
-                            self.network.publish(viewmodel.id + '.bound'); // Notify subscribers of arrived event
+                            this.network.publish(viewmodel.id + '.bound'); // Notify subscribers of arrived event
                             deferred.resolve(); // Resolve promise
                         }
-                    };
+                    }.bind(this);
 
                     xhr.send();
-                });
+                }.bind(this));
             } else {
                 this.network.publish(viewmodel.id + '.bound');
                 deferred.resolve();
@@ -254,45 +246,43 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         return deferred.promise;
     };
 
-    $galaxy.prototype.hideInactiveViews = function(id) {
-        var self = this;
-
-        // Capture current view and hide all others (not autoRender views)
-        self.federation.forEach(function(view) {
+    // Capture current view and hide all others (not autoRender views)
+    $galaxy.prototype.hideInactiveViews = function (id) {
+        this.federation.forEach(function(view) {
             if (!view.autoRender && view.id !== id) {
-                self.getDOMElements(view.domBindingId).forEach(function(el) {
+                this.getDOMElements(view.domBindingId).forEach(function (el) {
                     el.style.display = 'none';
                 });
             }
-        });
+        }.bind(this));
     };
 
-    $galaxy.prototype.render = function(viewmodelId, payload) {
-        var self = this;
+    $galaxy.prototype.render = function (viewmodelId, payload) {
         var currentViewModel = null;
 
-        self.loadViewModel(viewmodelId).then(function(vm) {
+        this.loadViewModel(viewmodelId).then(function (vm) {
             currentViewModel = vm;
-            self.hideInactiveViews(viewmodelId);
+            this.hideInactiveViews(viewmodelId);
 
-            return self.loadTemplate(viewmodelId);
-        }).then(function() {
+            return this.loadTemplate(viewmodelId);
+        }.bind(this)).then(function () {
 
             // After view is loaded, ensure it is visible
-            self.getDOMElements(currentViewModel.domBindingId).forEach(function(el) {
+            this.getDOMElements(currentViewModel.domBindingId).forEach(function (el) {
                 el.style.display = '';
             });
 
-            self.network.publish(currentViewModel.id + '.docked', payload);
+            // Publish docked() event
+            this.network.publish(currentViewModel.id + '.docked', payload);
 
             // Render any children views/widgets
             if (currentViewModel.hasOwnProperty('children')) {
                 currentViewModel.children.map(function(child) {
-                    self.render(child.id);
+                    this.render(child.id);
                 });
             }
 
-        }).fail(function(ex) {
+        }.bind(this)).fail(function(ex) {
             console.error(ex);
         }).
         catch (function(ex) {
@@ -381,7 +371,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         SpaceTime.prototype.scan = function(pattern) {
-            var self = this;
             var totalPayload = {};
             var moduleId, urlParamArray, currentViewModel;
 
@@ -400,7 +389,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             }
 
             // Find any registered routes where the module name matches
-            var matches = self.routes.filter(function(route) {
+            var matches = this.routes.filter(function(route) {
                 return route.pattern.split('/')[0] === moduleId;
             }) || false;
 
@@ -430,8 +419,8 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
             if (matches && matches.length) {
                 // Combine URL and smuggled payload
-                for(var goods in self.smuggledPayload) {
-                    totalPayload[goods] = self.smuggledPayload[goods];
+                for(var goods in this.smuggledPayload) {
+                    totalPayload[goods] = this.smuggledPayload[goods];
                 }
                 galaxy.render(matches[0].viewModel, totalPayload);
                 if (matches[0].callback !== null) {
@@ -452,15 +441,14 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
         Store.prototype.populate = function(force) {
             var deferred = Q.defer();
-            var self = this;
 
-            if (!self._dirty && self.collection().length && !force) { // Already populated and not dirty
+            if (!this._dirty && this.collection().length && !force) { // Already populated and not dirty
                 deferred.resolve();
-            } else if (!self._dirty || force) { // Not dirty, but client forces population
-                self.proxy.load().then(function(models) {
-                    self.collection(models);
+            } else if (!this._dirty || force) { // Not dirty, but client forces population
+                this.proxy.load().then(function (models) {
+                    this.collection(models);
                     deferred.resolve();
-                }).fail(function(err) {
+                }.bind(this)).fail(function(err) {
                     console.log('Failed to load from remote proxy. ' + err.toString());
                     deferred.reject();
                 }).done();
@@ -476,28 +464,24 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         Store.prototype.sync = function() {
-            var self = this;
-
-            self.collection.forEach(function(type) {
+            this.collection.forEach(function(type) {
                 if (type.hasOwnProperty("_local") && type._local) {
-                    self.proxy.save(type).then(function() {
+                    this.proxy.save(type).then(function() {
                         type._local = false;
                     }).fail(function(err) {
                         console.error(err);
                     }).done();
                 }
-            });
+            }.bind(this));
         };
 
         Store.prototype.add = function(type) {
-            var self = this;
-
             if (type instanceof Array) {
                 type.forEach(function(item) {
-                    self.collection.push(item);
-                });
+                    this.collection.push(item);
+                }.bind(this));
             } else {
-                self.collection.push(type);
+                this.collection.push(type);
             }
         };
 
