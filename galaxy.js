@@ -1,9 +1,4 @@
 define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
-    var DuplicateViewRegistrationException = function(message) {
-        this.message = message;
-        this.name = "DuplicateViewRegistrationException";
-    };
-
     var UnregisteredViewWarning = function(message) {
         this.message = message;
         this.name = "UnregisteredViewWarning";
@@ -17,11 +12,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
     var MissingDOMElementException = function(message) {
         this.message = message;
         this.name = "MissingDOMElementException";
-    };
-
-    var ViewLoadedException = function(message) {
-        this.message = message;
-        this.name = "ViewLoadedException";
     };
 
     var MissingOptionException = function(message) {
@@ -80,10 +70,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                 }
             }
         }
-    };
-
-    $galaxy.prototype.addRoute = function(pattern, vmId, hash) {
-        this.StarChart.addRoute(pattern, vmId, hash);
     };
 
     $galaxy.prototype.create = function(options) {
@@ -288,24 +274,9 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         catch (function(ex) {
             console.error(ex);
         }).
-        finally(function() {});
+        finally(function() {
 
-        // Immediately render any module marked with autoRender (usually navigation elements)
-        // if (viewmodel.hasOwnProperty('autoRender') && viewmodel.autoRender) {
-        //     self.render(viewmodel.id);
-        // }
-
-        // location.hash has a view id in it, and the current view matches it.  Render view.
-        // if (self.StarChart.currentLocation !== null && viewmodel.id === self.StarChart.currentLocation) {
-        //     self.render(viewmodel.id);
-        // }
-
-        // Nothing in the location.hash, and current view marked as default. Render view.
-        // if (self.StarChart.currentLocation === null && viewmodel.hasOwnProperty('defaultView') && viewmodel.defaultView) {
-        //     self.currentLocation = viewmodel.id;
-        //     self.render(viewmodel.id);
-        //     window.location.hash = viewmodel.id;
-        // }
+        });
     };
 
 
@@ -371,7 +342,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         SpaceTime.prototype.scan = function(pattern) {
-            var this = this;
             var totalPayload = {};
             var moduleId, urlParamArray, currentViewModel;
 
@@ -408,7 +378,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
             // Create a data payload from the parameterized segments
             if (matches && matches.length && urlParamArray && urlParamArray.length) {
-                var _arguments = matches[0].pattern.split('/')
+                var arg, _arguments = matches[0].pattern.split('/');
                 _arguments.splice(0, 1);
 
                 for (var i = 0, j = _arguments.length; i <= j, arg = _arguments[i]; i += 1) {
@@ -442,7 +412,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
         Store.prototype.populate = function(force) {
             var deferred = Q.defer();
-            var this = this;
 
             if (!this._dirty && this.collection().length && !force) { // Already populated and not dirty
                 deferred.resolve();
@@ -509,6 +478,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
         return new Store();
     };
+
 
     return new $galaxy();
 });
