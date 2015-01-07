@@ -1,14 +1,17 @@
 requirejs.config({
    paths: {
-        'knockout': 'bower_components/knockout.js/knockout',
-        'q': 'bower_components/q/q.min',
-        'underscore': 'bower_components/underscore/underscore',
-        'postal': 'bower_components/postal.js/lib/postal.min',
-        'galaxy': 'bower_components/galaxy.js/galaxy.min',
+        'knockout': '../bower_components/knockout.js/knockout',
+        'q': '../bower_components/q/q.min',
+        'underscore': '../bower_components/underscore/underscore',
+        'postal': '../bower_components/postal.js/lib/postal.min',
+        'galaxy': '../bower_components/galaxy.js/galaxy',
     }
 });
 
 require(['galaxy'], function ($galaxy) {
+    "use strict";
+
+    console.log('You have entered the galaxy');
 
     // Set up navigational routes
     $galaxy.route('').to('welcome').then(function () {
@@ -16,6 +19,7 @@ require(['galaxy'], function ($galaxy) {
     });
 
     $galaxy.route('home').to('welcome');
+    $galaxy.route('welcome').to('welcome');
     $galaxy.route('users').to('user.list');
     $galaxy.route('users/:id').to('user.detail');
     $galaxy.route('users/:id/edit').to('user.edit');

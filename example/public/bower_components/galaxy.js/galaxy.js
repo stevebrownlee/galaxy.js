@@ -1,25 +1,27 @@
 define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
+    'use strict';
+
     var UnregisteredViewWarning = function(message) {
         this.message = message;
-        this.name = "UnregisteredViewWarning";
+        this.name = 'UnregisteredViewWarning';
     };
 
     var MissingViewModelException = function(message) {
         this.message = message;
-        this.name = "MissingViewModelException";
+        this.name = 'MissingViewModelException';
     };
 
     var MissingDOMElementException = function(message) {
         this.message = message;
-        this.name = "MissingDOMElementException";
+        this.name = 'MissingDOMElementException';
     };
 
     var MissingOptionException = function(message) {
         this.message = message;
-        this.name = "MissingOptionException";
+        this.name = 'MissingOptionException';
     };
 
-    var $galaxy = function(options) {
+    var $galaxy = function() {
         this.network = postal.channel('galaxy');
         this.viewmodelDirectory = '/app/viewmodel';
         this.viewDirectory = '/app/view';
@@ -44,9 +46,9 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                         routeParameters.callback = callback;
                         this.StarChart.updateRoute(routeParameters);
                     }.bind(this)
-                }
+                };
             }.bind(this)
-        }
+        };
     };
 
     $galaxy.prototype.warp = function () {
@@ -55,7 +57,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         var engage = function () {
             this.StarChart.warp(warpParameters);
         }.bind(this);
-        
+
         return {
             to: function (location) {
                 warpParameters.location = location;
@@ -65,11 +67,11 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                         warpParameters.payload = payload;
                         return {
                             engage: engage
-                        }
+                        };
                     }
-                }
+                };
             }
-        }
+        };
     };
 
     $galaxy.prototype.create = function(options) {
@@ -123,7 +125,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         }
 
         if (elements[elements.length - 1] === null) {
-            throw new MissingDOMElementException('The DOM element you specified (' + id + ') for view model `' + this.currentLocation + '` was not found.')
+            throw new MissingDOMElementException('The DOM element you specified (' + id + ') for view model `' + this.currentLocation + '` was not found.');
         }
 
         return elements;
@@ -169,7 +171,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             // Give each model a show method that delegates to the internal join() function
             if (!viewmodel.hasOwnProperty('show')) {
                 viewmodel.show = function () {
-                    this.render(viewModel.id);
+                    this.render(viewmodel.id);
                 }.bind(this);
             }
 
@@ -186,18 +188,6 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         }
     };
 
-    $galaxy.prototype.leave = function(id) {
-        var exists = _.findWhere(this.federation, {
-            id: id
-        });
-
-        if (exists) {
-            this.federation = _.filter(this.federation, function(vm) {
-                vm.id !== id;
-            });
-        }
-    };
-
     $galaxy.prototype.loadTemplate = function (id) {
         var deferred = Q.defer();
         var viewmodel = this.federation.filter(function (vm) {
@@ -208,7 +198,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             if (!viewmodel.__loaded) {
                 var viewTemplate = [this.viewDirectory, '/', viewmodel.templatePath].join('');
 
-                this.getDOMElements(viewmodel.domBindingId).forEach(function (el) {
+                this.getDOMElements(viewmodel.domBindingId).forEach(function __loadHTMLTemplate (el) {
                     var xhr = new XMLHttpRequest(); // Create XHR object
                     xhr.open('GET', viewTemplate, true); // GET the HTML file for the view model
                     xhr.onloadend = function viewTemplateLoadEnd (evt) { // After it's loaded
@@ -234,7 +224,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
     // Capture current view and hide all others (not autoRender views)
     $galaxy.prototype.hideInactiveViews = function (id) {
-        this.federation.forEach(function(view) {
+        this.federation.forEach(function __hideView (view) {
             if (!view.autoRender && view.id !== id) {
                 this.getDOMElements(view.domBindingId).forEach(function (el) {
                     el.style.display = 'none';
@@ -254,7 +244,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         }.bind(this)).then(function () {
 
             // After view is loaded, ensure it is visible
-            this.getDOMElements(currentViewModel.domBindingId).forEach(function (el) {
+            this.getDOMElements(currentViewModel.domBindingId).forEach(function __showView (el) {
                 el.style.display = '';
             });
 
@@ -263,15 +253,15 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
             // Render any children views/widgets
             if (currentViewModel.hasOwnProperty('children')) {
-                currentViewModel.children.map(function(child) {
+                currentViewModel.children.map(function __renderChild (child) {
                     this.render(child.id);
                 });
             }
 
-        }.bind(this)).fail(function(ex) {
+        }.bind(this)).fail(function __loadViewFailed (ex) {
             console.error(ex);
         }).
-        catch (function(ex) {
+        catch (function __loadViewException (ex) {
             console.error(ex);
         }).
         finally(function() {
@@ -291,7 +281,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         SpaceTime.prototype.updateRoute = function(routeParameters) {
-            var matchedRoute = this.routes.filter(function (route) {
+            var matchedRoute = this.routes.filter(function __routeFilter (route) {
                 return route.pattern === routeParameters.pattern;
             })[0];
 
@@ -314,7 +304,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             var targetLocation;
 
             try {
-                // If the argument is a string, assume it's the location for transport 
+                // If the argument is a string, assume it's the location for transport
                 if (options && typeof options === 'string') {
                     targetLocation = options;
                 } else if (options && typeof options === 'object' && !options.hasOwnProperty('location')) {
@@ -323,7 +313,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                     targetLocation = options.location;
                 }
 
-                match = this.routes.filter(function(route) {
+                match = this.routes.filter(function (route) {
                     return route.pattern === targetLocation;
                 })[0];
 
@@ -332,7 +322,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
                 if (options.hasOwnProperty('payload') && options.payload) {
                     this.smuggledPayload = options.payload;
                 }
-
+                console.log('hashBuilder',hashBuilder);
                 window.location.hash = hashBuilder.join(''); // Set the location hash
             } catch (ex) {
                 console.error(ex);
@@ -341,34 +331,35 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             return match;
         };
 
-        SpaceTime.prototype.scan = function(pattern) {
+        SpaceTime.prototype.scan = function() {
             var totalPayload = {};
-            var moduleId, urlParamArray, currentViewModel;
 
             // Parse the location.hash to find the view id
-            var locationHash = location.hash.split('#')[1] || '';
+            var locationHash = window.location.pathname || '/';
+
+            var urlParamArray = locationHash.split('/');
+            urlParamArray.splice(0, 1);
 
             // Default the module id to the location hash (overridden below if needed)
-            moduleId = locationHash;
+            var moduleId = locationHash.split('/')[1];
 
             // If there's more than one segment in the hash, parse them all out and
             // redefine the module id as the first segment
-            if (locationHash !== '') {
-                urlParamArray = locationHash.split('/');
+            if (urlParamArray.length > 1) {
                 moduleId = urlParamArray[0];
-                urlParamArray.splice(0, 1);
             }
 
             // Find any registered routes where the module name matches
-            var matches = this.routes.filter(function(route) {
+            var matches = this.routes.filter(function (route) {
                 return route.pattern.split('/')[0] === moduleId;
             }) || false;
 
             // If any module name matches, filter it further to any registered
             // routes with the same pattern length
             if (matches) {
-                matches = matches.filter(function(route) {
-                    return locationHash.split('/').length === route.pattern.split('/').length;
+                matches = matches.filter(function (route) {
+                    var patternLength = route.pattern.split('/').length
+                    return urlParamArray.length === patternLength;
                 }) || false;
             }
 
@@ -390,7 +381,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
             if (matches && matches.length) {
                 // Combine URL and smuggled payload
-                for(var goods in this.smuggledPayload) {
+                for (var goods in this.smuggledPayload) {
                     totalPayload[goods] = this.smuggledPayload[goods];
                 }
                 galaxy.render(matches[0].viewModel, totalPayload);
@@ -416,7 +407,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
             if (!this._dirty && this.collection().length && !force) { // Already populated and not dirty
                 deferred.resolve();
             } else if (!this._dirty || force) { // Not dirty, but client forces population
-                this.proxy.load().then(function (models) {
+                this.proxy.load().then(function __populateAddModel(models) {
                     this.collection(models);
                     deferred.resolve();
                 }.bind(this)).fail(function(err) {
@@ -435,8 +426,8 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         Store.prototype.sync = function() {
-            this.collection.forEach(function(type) {
-                if (type.hasOwnProperty("_local") && type._local) {
+            this.collection.forEach(function __storeSyncFilter(type) {
+                if (type.hasOwnProperty('_local') && type._local) {
                     this.proxy.save(type).then(function() {
                         type._local = false;
                     }).fail(function(err) {
@@ -448,7 +439,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
 
         Store.prototype.add = function(type) {
             if (type instanceof Array) {
-                type.forEach(function(item) {
+                type.forEach(function __storeAddFilter(item) {
                     this.collection.push(item);
                 }.bind(this));
             } else {
@@ -461,7 +452,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         Store.prototype.remove = function(item) {
-            var filtered = this.collection().filter(function(type) {
+            var filtered = this.collection().filter(function __storeRemoveFilter(type) {
                 return JSON.stringify(type) !== JSON.stringify(item);
             });
 
@@ -469,7 +460,7 @@ define(['q', 'knockout', 'postal'], function(Q, ko, postal) {
         };
 
         Store.prototype.removeById = function(id) {
-            var filtered = this.collection().filter(function(type) {
+            var filtered = this.collection().filter(function __storeRemoveIdFilter(type) {
                 return type.id !== id;
             });
 

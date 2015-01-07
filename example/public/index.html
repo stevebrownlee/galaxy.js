@@ -19,5 +19,13 @@
         <div id="product-detail"></div>
     </body>
 
-    <script data-main="application" src="bower_components/requirejs/require.js"></script>
+<!--
+    <script src="bower_components/requirejs/require.js"></script>
+    <script>
+        require.config({ paths: {"galaxy": "lib/example.compiled"} });
+        require(["galaxy"]);
+    </script>
+ -->
+
+    <script data-main="/lib/example.readable" src="/bower_components/requirejs/require.js"></script>
 </html>
