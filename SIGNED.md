@@ -3,19 +3,19 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAABAgAGBQJU5r3GAAoJEOA4iZfcLPWDbiUP/R31a5jOrDdA9hv3oGWmhXP8
-PMjIb+zK1C9yKcLDMcYAuSG61b7WWogFiRzH0VgDWBrJDJo6kMBPmQDws1n6H4R0
-UyPFSopc/ptqvGHuAhajCLRIzLLiPmWvOh0BmKwDbdA2mpLs2kDQPstEIRPqgDTr
-4vc6FdvJLQt/CafBO5Z599103Ab+CbvOzSlKGIaNbcB1kwoXFVr1op7rs4UYNpBh
-2xIH5UUTdzl9L+cUIx8YW8HE8t5/j6aiVQ7HQgNLvCWSTkYpBIQFHE5brGvd1wgq
-6dz3lqmscnv5C7DtXMXoMQ++UvJDO9h9qjm/IRoDnor+IJYni1ujUXMPPprmVk74
-t207KDsXDfeNNOZ3w9QkolTq/Fxd1zI+iaB02Z62xmBH+gaTXQRoPFNOu0Wfo06/
-edFOKTnsl4mrIh269IIiJDD6rEtQg7N0nrLF2oDsDNf4gvWE7M/Nc4I8xQhIaJrj
-sUrLuH206io1/HwuTOe9Vks2KUUDIbpw8ZZcQHBTcLXEohaa8n7PyztD3i1LEj8W
-WRAa+7EvznGla1yzN4vtB4ZZ4NpDR1yaDy+kfpxl41FVcDowXSDVnF+XuTGtbP+T
-/KPWCYauQQStmaq0HGjemD3TWjaASaT/XXirrhHuxdwatCYt29yCSTIBvugguDT8
-ICm0jCcc2EN2I4Tg1oh1
-=VtRz
+iQIcBAABAgAGBQJU5sCnAAoJEOA4iZfcLPWD7+4P/jX7lJNuDcc02rlzjYFZpsEk
+RSdeYJ4d9FoxL8oXJjUNS9RM3UUSJY6OnpFrB2AZmE3pxSVA6DuJIvYV4Kh1wwBZ
+4qOLW+rEcN/8YfBXOx/x+MKy8SgEWJrWmaDQcL1k6yOr/Umscrq/Qs+ruNZ/OSeE
+7PenttV/vFGeNnA1tV/AQgaF+8JHc5BPIENF6bg2ep+uMkcLCxlo7VM540kIuXNo
+ucFiFuLGN49dyJ9fqqgfmHn5CuZPbDuDsRu8jNXn5g2IeQkurlDt3BovcnNg0tX2
+g2H28Qezz7vHNKtFKlkksNGDcg3DBiWv360a9qIKM5UL3AT7QNfYeGdvZFf9UYP8
+acRmMfHIFdZhbH5PS4CnUKSmy/rRzmpKIAJaI0bCKrD5p1NZmtASHnu/p7aUUG5t
+Pz0qCcmdv6GR6H49mkDapWtSLU27n14BfmiQJZcZ7RPXj68wUOiVst0Eim3QHfJG
+FM4/HyLRzf0mPrDHkYWhwaa6evwyMj1LfON+f1sE9gUZnIB7avYcWvDjWL3prBzS
+LYlnUenp/W0VW3lYSOCC9zZklj8WQ01gwxOa2ras8vSsYQHNTIxGSCU2pr1eKX/P
+ASiSpnNbCY3U/ayWPE/9vWewmh+LpqFLyfm7P/JFdVqU/3BJzH7/WH+TXvIqgu0L
+SdQGKUbp1dSaD5GsIOZ+
+=JmJd
 -----END PGP SIGNATURE-----
 
 ```
@@ -30,13 +30,13 @@ ICm0jCcc2EN2I4Tg1oh1
 size    exec  file                         contents                                                        
               ./                                                                                           
 116             .gitignore                 d319d0c846ef848e024f5c281e315cdc3f60293b4fc0358cbfa07d44a00ab2bc
-249             BUILD.md                   16188f9a28ae0de13faa5224bbbb51025c340714ec695e601bc0ce47e6c9736a
+252             BUILD.md                   fb1b9480cd942653ab04eb3a3759a7acacc6834ac04a550bde8dc7fa7fa7cdab
 11323           LICENSE                    6dc0e068dcf3a5bc8e054205b85b7720e1d49265bbc64bf515d2cf79197df69a
 19473           README.md                  bd3aa2357d693b675200f16e634a0616d805340d90090dedd6c984514130ba33
 816             bower.json                 bc3b4fd63334e9f63d325ffbbccce42d9965ca79be35ce980cbc674e2c82f955
                 build/                                                                                     
-9368              galaxy.map               a5e1f731e5b31a930e6c7629f919529fba54b4846316d43bc3493ca7b2efee1f
-7207              galaxy.min.js            15d8b36c028b0722e0a4238d4dfed1792e376b992644630fc55b6256c75f7976
+10039             galaxy.map               b968702f13108a6eb530d35db5fe5ebe7d0f6d12cd2a591700653c24dc1dc8aa
+7766              galaxy.min.js            8dcce2e3034af8adf95d6ba86430b9ac6f77ff0ba9723e929ef82d5ee7a4433e
                 example/                                                                                   
                   build/                                                                                   
 428                 build.js               89968f005fbfac226ab048a84f573d9d7a91d2ebc9eee006db770997342ebda5
@@ -65,7 +65,7 @@ size    exec  file                         contents
 45489                   underscore.js      ee8ba6b58a9c67d9f7148b31f90851767c45aeaa8c86fbf7e981ba255d39240b
 793                 index.html             af8e58f6e7158da9519b15ef21ceed343fe104b58b101aad5dfbbc6c33697f67
                     lib/                                                                                   
-89541                 example.compiled.js  65446505366630d990f8f5296f5ed3c212a726d95706a6e7e394305dc3b05cd6
+89551                 example.compiled.js  a843c8ed7014d9dda75dd3d454a81f0971be078e42bca8e1fd61938c28e2e7e0
 1200                  example.readable.js  7fa06e6efa2625390087ea545aa407100f6b06ca6cadb6d2c920e3d4d16fe6ac
                     model/                                                                                 
                     store/                                                                                 
