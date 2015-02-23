@@ -1,8 +1,8 @@
 # Uglify and minify the code
     npm install -g uglifyjs
 
-    uglifyjs ./src/galaxy.js --source-map ./build/galaxy.map --screw-ie8 -o ./build/galaxy.min.js -m
-
+    uglifyjs ./src/galaxy.js --screw-ie8 -o ./dist/galaxy.min.js -c -m -r 'exports,Q,ko,postal,define,require'
+    
 # Compile and build for example application
 
     cd example/build

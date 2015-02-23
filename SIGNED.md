@@ -3,19 +3,19 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAABAgAGBQJU5sCnAAoJEOA4iZfcLPWD7+4P/jX7lJNuDcc02rlzjYFZpsEk
-RSdeYJ4d9FoxL8oXJjUNS9RM3UUSJY6OnpFrB2AZmE3pxSVA6DuJIvYV4Kh1wwBZ
-4qOLW+rEcN/8YfBXOx/x+MKy8SgEWJrWmaDQcL1k6yOr/Umscrq/Qs+ruNZ/OSeE
-7PenttV/vFGeNnA1tV/AQgaF+8JHc5BPIENF6bg2ep+uMkcLCxlo7VM540kIuXNo
-ucFiFuLGN49dyJ9fqqgfmHn5CuZPbDuDsRu8jNXn5g2IeQkurlDt3BovcnNg0tX2
-g2H28Qezz7vHNKtFKlkksNGDcg3DBiWv360a9qIKM5UL3AT7QNfYeGdvZFf9UYP8
-acRmMfHIFdZhbH5PS4CnUKSmy/rRzmpKIAJaI0bCKrD5p1NZmtASHnu/p7aUUG5t
-Pz0qCcmdv6GR6H49mkDapWtSLU27n14BfmiQJZcZ7RPXj68wUOiVst0Eim3QHfJG
-FM4/HyLRzf0mPrDHkYWhwaa6evwyMj1LfON+f1sE9gUZnIB7avYcWvDjWL3prBzS
-LYlnUenp/W0VW3lYSOCC9zZklj8WQ01gwxOa2ras8vSsYQHNTIxGSCU2pr1eKX/P
-ASiSpnNbCY3U/ayWPE/9vWewmh+LpqFLyfm7P/JFdVqU/3BJzH7/WH+TXvIqgu0L
-SdQGKUbp1dSaD5GsIOZ+
-=JmJd
+iQIcBAABAgAGBQJU6qjtAAoJEOA4iZfcLPWDa4QP/0RKlAFEEK43BnbXEfKbmblW
+ilj/JVtJbEoDKIs5LH4mNp/FjBO7JhV7BQVe5XgXMFKr9FOEd8wQMg1VzI5/a9SU
+xqv0caJ9vrLl4Z9u1NsuFfAkcEdy8HRwfPuPDelFoXtAdPaZRYPEYc8RLy1XRaWd
+XHFRZOk8zp5nJdswG89hECmX8e+H7D/LoGmOZDkofWt6pp4g+jcp4e2wWB2BpmQ5
+7WOTFsmi6WEjRJklwSnDuklm4qCcA04I7BU5fZIKfJQSVPFDWCkAj4RnJWzSOORS
+yxGnbvqDBOpeZoO+82Jv/VSL4ejrgyELlpnZzG4ZABB2yKjcm3xh86VNEtU4TJHF
+ijBb9qWjeC0kiN9DFxvXobzM11/n2k/N6+dICW8LT58VEtq20wmseAQUJMmdi/aa
+6Zbua1rLO6RAXRy8TDWZAgCCttHyqTkJcvdsQ68vVjIkVYWqTeU9AxcpYnx/L9r9
+rB0l1O23YO2+XbO8Pa+VZB/NYhsmtKfqerXLedPst7IgEwHb7pJjCIyHaTEOsUxL
+f6YhHiBYPDG8yrr/PZZxaCKYmK4Q2wmRW7wraLTJgvZSOE6wu2pHo/qKD21K/zP8
+PyJf6nXYhahM0uSf0l5g6NamlBV3vexh0hftGBpJF3y8Q+yLk8uSXv8OZBJa3rpq
+Vrb4A/akOyKPfU2sCNHt
+=WUj9
 -----END PGP SIGNATURE-----
 
 ```
@@ -29,40 +29,18 @@ SdQGKUbp1dSaD5GsIOZ+
 ```
 size    exec  file                         contents                                                        
               ./                                                                                           
-116             .gitignore                 d319d0c846ef848e024f5c281e315cdc3f60293b4fc0358cbfa07d44a00ab2bc
-252             BUILD.md                   fb1b9480cd942653ab04eb3a3759a7acacc6834ac04a550bde8dc7fa7fa7cdab
+133             .gitignore                 b793c198eca6c140b7023a422051e8296ffb0027188ae8baef870760a638a764
+266             BUILD.md                   e6aac364222361aa32c12fb9bd3e458eaed83e15e85abc11dc6c26a1fa1eee95
 11323           LICENSE                    6dc0e068dcf3a5bc8e054205b85b7720e1d49265bbc64bf515d2cf79197df69a
 19473           README.md                  bd3aa2357d693b675200f16e634a0616d805340d90090dedd6c984514130ba33
-816             bower.json                 bc3b4fd63334e9f63d325ffbbccce42d9965ca79be35ce980cbc674e2c82f955
-                build/                                                                                     
-10039             galaxy.map               b968702f13108a6eb530d35db5fe5ebe7d0f6d12cd2a591700653c24dc1dc8aa
-7766              galaxy.min.js            8dcce2e3034af8adf95d6ba86430b9ac6f77ff0ba9723e929ef82d5ee7a4433e
+712             bower.json                 d0f40e6a5c1c0e8578ee6c2899581ba15b35b541f1be9fd5f87a14c56d0e76f5
+                dist/                                                                                      
+6124              galaxy.min.js            867b24d72c8117629cd7ca2e2a32625a5230a9d619d7588fd7751f4ab354dd86
                 example/                                                                                   
                   build/                                                                                   
-428                 build.js               89968f005fbfac226ab048a84f573d9d7a91d2ebc9eee006db770997342ebda5
+427                 build.js               56f8625ea947b146c12e048da3e2aa40328ccb51b17c9ea06a95d736bd1f880a
 978577              r.js                   de5f0816ec6d8a82db7320ba429208eb22f7e028d94e2419ec02a52dc505a8a1
                   public/                                                                                  
-                    bower_components/                                                                      
-                      galaxy.js/                                                                           
-17331                   galaxy.js          0d15ba31aca9d09e0094c4066d79739cdff43cb5fa5050ec4ff28fefa784a271
-9354                    galaxy.map         9ddb30caf7be5e02522991a0d0e9090efadde920cb4e8392748d7a4b703fed05
-7201                    galaxy.min.js      4a1ced5408bc21e415db19ee8b18d87dc5a97642036bab0ad8ba3ab1afdc2321
-                      jquery/                                                                              
-1099                    MIT-LICENSE.txt    244779275ccf7def02a7724a707dfe8787f83afd5ccb6498b42296ae42484940
-83606   x               jquery.min.js      a57b5242b9a9adc4c1ef846c365147b89c472b9cd770face331efcb965346b25
-                      knockout.js/                                                                         
-46129                   knockout.js        6b97155dd807f48cb02eee6a4a984bf96b0b4bfa4a16ba712166b2f204663ca1
-                      postal.js/                                                                           
-                        lib/                                                                               
-6499    x                 postal.min.js    34c264fbc1166a6efb6ac1f09de5147113303c56d4b3d91306c99d0dd694b16e
-                      q/                                                                                   
-1093                    LICENSE            0e229b4b8437e11720494e3798cc4d6d1d2a4cc3203b5e5cef1792062e98ddad
-14668                   q.min.js           ef5c443af700c013669723f55a56fa20b63045f41169a19fe76f3c4d1a95c66a
-                      requirejs/                                                                           
-82718                   require.js         12e3d143d4976e787dd384d3bf33264cbba2ecd01622f33888a84be41cd1115a
-                      underscore/                                                                          
-1117                    LICENSE            f36e6a7c492c5d2f8492fa6f624c53b1f7afdbeb8216c3bd638d4efd0bc192e8
-45489                   underscore.js      ee8ba6b58a9c67d9f7148b31f90851767c45aeaa8c86fbf7e981ba255d39240b
 793                 index.html             af8e58f6e7158da9519b15ef21ceed343fe104b58b101aad5dfbbc6c33697f67
                     lib/                                                                                   
 89551                 example.compiled.js  a843c8ed7014d9dda75dd3d454a81f0971be078e42bca8e1fd61938c28e2e7e0
@@ -89,7 +67,7 @@ size    exec  file                         contents
 317                 package.json           b01a7193de339701701fa0c99b90a50df8bfeec7264fa0045788c38f3a3881cf
 450                 server.js              f965baac1708876c0dafa2929f716a2a8e2a8bef498f4e5581acf4e0b77223f5
                 src/                                                                                       
-16277             galaxy.js                8bf2eb8b9a9d45ba749f94a0884a71d184823fdbd624e0d382457e8710126086
+13330             galaxy.js                fb8c64bf6d8e5976408d55bf70f28877e054e9caaa7383c3ba53fb7acc2a5ce1
 ```
 
 #### Ignore

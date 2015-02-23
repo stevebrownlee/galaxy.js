@@ -1,14 +1,12 @@
 {
   "name": "galaxy.js",
   "main": "galaxy.js",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "dependencies": {
-    "jquery": "~2.0.3",
-    "q": "~0.9.7",
-    "underscore": "~1.6.0",
-    "postal.js": "~0.8.11",
-    "requirejs": "~2.1.11",
-    "knockoutjs": "~3.1.0"
+    "q": "~1.1.2",
+    "postal.js": "~1.0.0",
+    "requirejs": "~2.1.16",
+    "knockoutjs": "~3.3.0"
   },
   "homepage": "https://github.com/chortlehoort/galaxy.js",
   "authors": [
@@ -34,8 +32,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "resolutions": {
-    "underscore": "~1.6.0"
-  }
+  ]
 }
