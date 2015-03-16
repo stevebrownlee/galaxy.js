@@ -37,7 +37,6 @@ define(function (require) {
   $galaxy.prototype.warp = function () {
     var warpParameters = {};
 
-
     var engage = function () {
       this.Starship.warp(warpParameters);
       this.scan();  // Trigger scan method to respond to new URL
@@ -297,7 +296,7 @@ define(function (require) {
   var Starship = function() {
     this.routes = [];
     this.currentLocation = null;
-    this.smuggledPayload = null;
+    this.smuggledPayload = {};
   };
 
   Starship.prototype.getPayload = function () {
@@ -358,33 +357,35 @@ define(function (require) {
 
   Starship.prototype.scan = function (pattern) {
     var totalPayload = {};
-    var moduleId, urlParamArray, currentViewModel;
+    var moduleId, urlParamArray, currentViewModel, originalParamArray;
 
     // Parse the location.hash to find the view id
-    var locationHash = location.pathname.split('/')[1];
+    var urlParamArray = location.pathname.split('/');
+    urlParamArray.splice(0,1); // This removes the first blank space in the array
+    originalParamArray = urlParamArray.slice();
+
     // var locationHash = location.hash.split('#')[1] || '';
 
     // Default the module id to the location hash (overridden below if needed)
-    moduleId = locationHash;
+    moduleId = urlParamArray[0];
 
     // If there's more than one segment in the hash, parse them all out and
     // redefine the module id as the first segment
-    if (locationHash !== '') {
-      urlParamArray = locationHash.split('/');
-      moduleId = urlParamArray[0];
-      urlParamArray.splice(0, 1);
+    if (urlParamArray.length > 1) {
+      moduleId = urlParamArray[0];  // Assign the first item as the module
+      urlParamArray.splice(0, 1);   // Remove the first item
     }
 
     // Find any registered routes where the module name matches
     var matches = this.routes.filter(function (route) {
       return route.pattern.split('/')[0] === moduleId;
-    }) || false;
+    }) || [];
 
     // If any module name matches, filter it further to any registered
     // routes with the same pattern length
-    if (matches) {
-      matches = matches.filter(function(route) {
-        return locationHash.split('/').length === route.pattern.split('/').length;
+    if (matches.length) {
+      matches = matches.filter(function (route) {
+        return originalParamArray.length === route.pattern.split('/').length;
       }) || false;
     }
 
@@ -395,7 +396,6 @@ define(function (require) {
     // Create a data payload from the parameterized segments
     if (matches && matches.length && urlParamArray && urlParamArray.length) {
       var _arguments = matches[0].pattern.split('/');
-
       _arguments.splice(0, 1);
 
       for (var i = 0, j = _arguments.length; i <= j, arg = _arguments[i]; i += 1) {
