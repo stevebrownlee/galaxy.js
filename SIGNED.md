@@ -3,19 +3,19 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAABAgAGBQJU6qjtAAoJEOA4iZfcLPWDa4QP/0RKlAFEEK43BnbXEfKbmblW
-ilj/JVtJbEoDKIs5LH4mNp/FjBO7JhV7BQVe5XgXMFKr9FOEd8wQMg1VzI5/a9SU
-xqv0caJ9vrLl4Z9u1NsuFfAkcEdy8HRwfPuPDelFoXtAdPaZRYPEYc8RLy1XRaWd
-XHFRZOk8zp5nJdswG89hECmX8e+H7D/LoGmOZDkofWt6pp4g+jcp4e2wWB2BpmQ5
-7WOTFsmi6WEjRJklwSnDuklm4qCcA04I7BU5fZIKfJQSVPFDWCkAj4RnJWzSOORS
-yxGnbvqDBOpeZoO+82Jv/VSL4ejrgyELlpnZzG4ZABB2yKjcm3xh86VNEtU4TJHF
-ijBb9qWjeC0kiN9DFxvXobzM11/n2k/N6+dICW8LT58VEtq20wmseAQUJMmdi/aa
-6Zbua1rLO6RAXRy8TDWZAgCCttHyqTkJcvdsQ68vVjIkVYWqTeU9AxcpYnx/L9r9
-rB0l1O23YO2+XbO8Pa+VZB/NYhsmtKfqerXLedPst7IgEwHb7pJjCIyHaTEOsUxL
-f6YhHiBYPDG8yrr/PZZxaCKYmK4Q2wmRW7wraLTJgvZSOE6wu2pHo/qKD21K/zP8
-PyJf6nXYhahM0uSf0l5g6NamlBV3vexh0hftGBpJF3y8Q+yLk8uSXv8OZBJa3rpq
-Vrb4A/akOyKPfU2sCNHt
-=WUj9
+iQIcBAABAgAGBQJVDYypAAoJEOA4iZfcLPWDWKYP/1zWqTLrKbmHQGkNBWu5LD6P
+H9IAQaXE1fGGE6H3q1K265K0xAXVKx4MzSuER2KDfUycjqxFQ63m7TzRc3Pm2pNv
+ajA/WESVc6B8eIJ5jGduEaZ2d5ddFvCukhX+iemtdx70xreM37D4DSWB/uSGjabk
+wRjp37g85GueKFlxxzfRnT0ST6LrKWvPH5KoYp9lTXOiRGOGQ0GmrovQslOjKqeA
+sPxnFcy9vF6u67TiiNGxN3TS8yvid/1mlWmjFeTPqDGd51281x7em86ws30o+dNn
+rDqvKJ0jzawhyomabc4i44NzMSHc8K8XUzOk/PjMFp2c87C2yWbO3VgHBDxegIyO
+xUwG4SQBsGqUW/0h5XtqTFdGNYHR0J1xDhs9uNJKA29OCgW0pdGlwg9TiPaMyzaL
+IbKWpz9qBUGnqBjJRMQEme1CqjOePqc0417oWXsv0l8f4BGXyBtxv6eBzhui0jlF
+sJUnkzGPY30NJ8j2DbR5/9X43wxcvtU8/Ed1g/v7gIGa3MHOOm3h27ZseGLZ5EjX
+RXLlSk5Ez8benMefWmRPcULBsCcAzy6KZoKy9mw3upCnkX135r/S69WQ0jaas/vH
+Ojd9191BCQv8NkRZo0cu2OrLE1a3MBehvamj8a0N2I43R95Jvw0fjU0kl/ia3XV+
+TY4JvzqtFDwh3vKO757V
+=j/i0
 -----END PGP SIGNATURE-----
 
 ```
@@ -32,7 +32,7 @@ size    exec  file                         contents
 133             .gitignore                 b793c198eca6c140b7023a422051e8296ffb0027188ae8baef870760a638a764
 266             BUILD.md                   e6aac364222361aa32c12fb9bd3e458eaed83e15e85abc11dc6c26a1fa1eee95
 11323           LICENSE                    6dc0e068dcf3a5bc8e054205b85b7720e1d49265bbc64bf515d2cf79197df69a
-19473           README.md                  bd3aa2357d693b675200f16e634a0616d805340d90090dedd6c984514130ba33
+19033           README.md                  ac4169175906f14cb739fc9bfd4fc02e811bc65a32cc36cdc7eaaaa53e7fa6af
 712             bower.json                 d0f40e6a5c1c0e8578ee6c2899581ba15b35b541f1be9fd5f87a14c56d0e76f5
                 dist/                                                                                      
 6124              galaxy.min.js            867b24d72c8117629cd7ca2e2a32625a5230a9d619d7588fd7751f4ab354dd86
@@ -67,7 +67,7 @@ size    exec  file                         contents
 317                 package.json           b01a7193de339701701fa0c99b90a50df8bfeec7264fa0045788c38f3a3881cf
 450                 server.js              f965baac1708876c0dafa2929f716a2a8e2a8bef498f4e5581acf4e0b77223f5
                 src/                                                                                       
-13330             galaxy.js                fb8c64bf6d8e5976408d55bf70f28877e054e9caaa7383c3ba53fb7acc2a5ce1
+13504             galaxy.js                ab097f3b42f9817b2ce55dbf9a93c2da64882f5ac9251ec565a6c05c6788476a
 ```
 
 #### Ignore
