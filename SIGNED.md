@@ -3,19 +3,19 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAABAgAGBQJVDYypAAoJEOA4iZfcLPWDWKYP/1zWqTLrKbmHQGkNBWu5LD6P
-H9IAQaXE1fGGE6H3q1K265K0xAXVKx4MzSuER2KDfUycjqxFQ63m7TzRc3Pm2pNv
-ajA/WESVc6B8eIJ5jGduEaZ2d5ddFvCukhX+iemtdx70xreM37D4DSWB/uSGjabk
-wRjp37g85GueKFlxxzfRnT0ST6LrKWvPH5KoYp9lTXOiRGOGQ0GmrovQslOjKqeA
-sPxnFcy9vF6u67TiiNGxN3TS8yvid/1mlWmjFeTPqDGd51281x7em86ws30o+dNn
-rDqvKJ0jzawhyomabc4i44NzMSHc8K8XUzOk/PjMFp2c87C2yWbO3VgHBDxegIyO
-xUwG4SQBsGqUW/0h5XtqTFdGNYHR0J1xDhs9uNJKA29OCgW0pdGlwg9TiPaMyzaL
-IbKWpz9qBUGnqBjJRMQEme1CqjOePqc0417oWXsv0l8f4BGXyBtxv6eBzhui0jlF
-sJUnkzGPY30NJ8j2DbR5/9X43wxcvtU8/Ed1g/v7gIGa3MHOOm3h27ZseGLZ5EjX
-RXLlSk5Ez8benMefWmRPcULBsCcAzy6KZoKy9mw3upCnkX135r/S69WQ0jaas/vH
-Ojd9191BCQv8NkRZo0cu2OrLE1a3MBehvamj8a0N2I43R95Jvw0fjU0kl/ia3XV+
-TY4JvzqtFDwh3vKO757V
-=j/i0
+iQIcBAABAgAGBQJVDY0RAAoJEOA4iZfcLPWDKGAP/jLcA5HKgIuJc/jsEpZUCe8f
+gNbPUM5q7iUMjfKG4VuOy/W95/nEoO4H8ag5D1SOx8DHHbLcSjHPZPuU8St3qs0h
+zzOI50OlWF3kILaABn+BmcH978ugMMgo1y9onNKEzqcALz+axr7efrxosUvGi14S
+vyyA5a8ndaoGR6E1MpNozthCt+wh5mCtNB4DMBttthKvP2X+Yu5gma7vtYfwVKky
+9ocwitFaf7feY9dEXZsxnvTRWM5OcsFiAI0XkDAcd93Uih3SUqy1AmN/qJl3qnLB
+QalNr4u8Mx/fRWTj13ccYNvPUrtvV12hp4hSQPyAtWajf9twHMV2mh0T4wGYnDvT
+qQ8mz2UqZg/LX8Dg/0URfENN02uR1SzCVdcKqyfszhP/fFfkAqLjFqWaZ7R7Us3p
+bsfYYuLZ6SqncpRneGh60QMBNcdA8fsF/T6L6Uu5j+kiLSlGLfb5Q4TJ/rWGC/aq
+1ukTiyAGTsaMg4BpAR2G+IB++UtEgOZA/axDBLbAzch4o/5wwb8N9V+TSLRltabk
+Lp9RSULtxcqc/GH3YAi1lKyBKlCkhqN6Bzbb9+yw6aUO+5gm/Rkm1/VnLQk7sBmL
+usKB4bNDQJ39bcqD/hnZsHrNV3NiuHlJCt8/Gp+xZaToRUxieLKY58LTJH0kCpri
+tI5fLuMZYkkqoyfNtgNR
+=atF+
 -----END PGP SIGNATURE-----
 
 ```
@@ -35,7 +35,7 @@ size    exec  file                         contents
 19033           README.md                  ac4169175906f14cb739fc9bfd4fc02e811bc65a32cc36cdc7eaaaa53e7fa6af
 712             bower.json                 d0f40e6a5c1c0e8578ee6c2899581ba15b35b541f1be9fd5f87a14c56d0e76f5
                 dist/                                                                                      
-6124              galaxy.min.js            867b24d72c8117629cd7ca2e2a32625a5230a9d619d7588fd7751f4ab354dd86
+6135              galaxy.min.js            e593d768b36b270bb88085ae823e889a2814ee93654e0ee7dcbebb672e2ee0c4
                 example/                                                                                   
                   build/                                                                                   
 427                 build.js               56f8625ea947b146c12e048da3e2aa40328ccb51b17c9ea06a95d736bd1f880a
