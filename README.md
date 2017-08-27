@@ -1,22 +1,22 @@
-#galaxy.js
+# galaxy.js
 
-##A lightweight library for building modular browser applications with Require and Knockout
+**A lightweight library for building modular browser applications with Require and Knockout**
 
 galaxy.js was written to allow [Knockout][1] developers to inject HTML template fragments into the DOM on an as-needed basis. So instead of having all of the DOM elements downloaded to every client, only the bare minimum is sent to each client on the initial request, and as more views are accessed, only then does the additional DOM get downloaded and injected into the current document.
 
 galaxy.js is a utility I wrote that allows people writing single page applications (SPAs) with Knockout and [Require][2] to have a lightweight solution that gives them a modular application with DOM binding and ad-hoc DOM injection. It also utilizes the [Q](https://github.com/kriskowal/q) library to implement Promises. For it's event system, I chose [Postal.js](https://github.com/postaljs/postal.js) because it combines just the right amount of features while still having a small footprint.
 
-# Running the example application
+## Running the example application
 In the `example` directory, I put together a very quick SPA that displays four different views, each with its own view model, with some minimal data binding.
 
-## Clone the repo
+### Clone the repo
 
 ```
 mkdir ~/projects && cd ~/projects
 git clone https://github.com/chortlehoort/galaxy.js.git
 ```
 
-## Install Node if you don't have it
+### Install Node if you don't have it
 
 ```
 sudo apt-get install nodejs  # For Ubuntu and its ilk
@@ -25,12 +25,12 @@ sudo yum install nodejs      # For CentOS and its ilk
     
 This will also install `npm`, the Node package manager service as well. Then you can install a basic HTTP server.
 
-## Install a basic Node HTTP server 
+### Install a basic Node HTTP server 
 The `http-server` module is just a very basic project that will serve static files from the directory of your choice.
 
     sudo npm install -g http-server
 
-## Serve the application
+### Serve the application
 Next, you go to the example application root folder and start the server.
 
     cd ~/projects/galaxy.js/example/public
@@ -46,9 +46,9 @@ Click on `Show Users` link and you'll be presented with another, very basic view
 
 Building a modular Knockout/Require application this way allows you to build up the DOM for each view (and even child views, or widgets) in separate HTML files and only inject them as needed.
 
-# Quick Start
+## Quick Start
 
-## Create a project directory
+### Create a project directory
 Create a new directory for your application.
 
 ```
@@ -56,13 +56,13 @@ mkdir ~/projects/intergalactic
 cd ~/projects/intergalactic
 ```
 
-## Install Bower
+### Install Bower
 
 ```
 npm install -g bower
 ```
 
-## Install galaxy.js
+### Install galaxy.js
 
 ```
 bower install galaxy.js --save    
@@ -70,7 +70,7 @@ bower install galaxy.js --save
 
 If you're not familiar with Bower, the `--save` flag will automatically create a `bower.json` file with the name and version of each Bower component you installed.
 
-## Create the base DOM
+### Create the base DOM
 
 Now you can start coding. The first step is to create the base DOM that galaxy.js will use to inject the DOM of your views. The only requirement is that you use require.js. So create a file in your directory named `index.html`. Paste in the following code.
 
@@ -89,7 +89,7 @@ Now you can start coding. The first step is to create the base DOM that galaxy.j
 </html>
 ```
     
-## Create require.js application file
+### Create require.js application file
 
 Create a file named `application.js` in the same directory as your HTML file. This is needed by require.js so that it knows where all the libraries that you want to use are located. For galaxy.js, we need Knockout, Underscore (used by require), postal.js, Q, and of course galaxy.js. Here's an example application file, but you can suit to your environment and needs.
 
@@ -115,7 +115,7 @@ require(['galaxy'], function () {
 
 ---
 
-## Create a dynamic view
+### Create a dynamic view
 
 First, create some basic directories for use later on.
 
@@ -137,7 +137,7 @@ So create that file and put the following simple code in it.
 </div>
 ```
 
-## Create a view model (a.k.a. a Star Base)
+### Create a view model (a.k.a. a Star Base)
 
 Now, the way Knockout works is having view models that control what the user sees on each view, and what will happen when the user interacts with elements on a particular view. The view model can be a simple object, or function, that returns some properties and methods.
 
@@ -160,7 +160,7 @@ As you can see this view model returns a very simple object. It has one function
 
 When the user clicks on that link, a message will be logged to the console.
 
-## Create a static view
+### Create a static view
 
 Static views are ones that you will want to be rendered on every page the user sees. For example, the navigation or the footer information. All views that will controlled by galaxy will be in directory named `views` so go ahead and create that now.
 
